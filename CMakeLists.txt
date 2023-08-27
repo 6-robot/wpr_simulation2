@@ -13,6 +13,7 @@ find_package(nav_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_action REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(tf2_geometry_msgs REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(nav2_msgs REQUIRED)
 
@@ -31,6 +32,7 @@ set(dependencies
   "rclcpp"
   "sensor_msgs"
   "tf2"
+  "tf2_geometry_msgs"
 )
 
 add_executable(wpb_home_mani_sim src/wpb_home_mani_sim.cpp)
@@ -61,6 +63,16 @@ ament_target_dependencies(5_lidar_data
 add_executable(5_lidar_behavior demo_cpp/5_lidar_behavior.cpp)
 ament_target_dependencies(5_lidar_behavior 
 "rclcpp" "sensor_msgs" "geometry_msgs"
+)
+
+add_executable(6_imu_data demo_cpp/6_imu_data.cpp)
+ament_target_dependencies(6_imu_data 
+"rclcpp" "sensor_msgs" "tf2" 
+)
+
+add_executable(6_imu_behavior demo_cpp/6_imu_behavior.cpp)
+ament_target_dependencies(6_imu_behavior 
+"rclcpp" "sensor_msgs" "tf2" "geometry_msgs"
 )
 
 add_executable(demo_mani_ctrl demo_cpp/demo_mani_ctrl.cpp)
@@ -94,6 +106,7 @@ install(
     3_publisher_node 3_subscriber_node
     4_velocity_command
     5_lidar_data 5_lidar_behavior
+    6_imu_data 6_imu_behavior
     demo_mani_ctrl  
     demo_nav2_client
   DESTINATION
