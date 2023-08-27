@@ -38,6 +38,16 @@ ament_target_dependencies(wpb_home_mani_sim
 "rclcpp" "std_msgs" "sensor_msgs"
 )
 
+add_executable(3_publisher_node demo_cpp/3_publisher_node.cpp)
+ament_target_dependencies(3_publisher_node 
+"rclcpp" "std_msgs"
+)
+
+add_executable(3_subscriber_node demo_cpp/3_subscriber_node.cpp)
+ament_target_dependencies(3_subscriber_node 
+"rclcpp" "std_msgs"
+)
+
 add_executable(demo_mani_ctrl demo_cpp/demo_mani_ctrl.cpp)
 ament_target_dependencies(demo_mani_ctrl
 "rclcpp" "sensor_msgs"
@@ -60,12 +70,13 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
-install(DIRECTORY config launch worlds models meshes rviz src map
+install(DIRECTORY config launch demo_launch worlds models meshes rviz src map
   DESTINATION share/${PROJECT_NAME})
 
 install(
   TARGETS
     wpb_home_mani_sim
+    3_publisher_node 3_subscriber_node
     demo_mani_ctrl  
     demo_nav2_client
   DESTINATION
