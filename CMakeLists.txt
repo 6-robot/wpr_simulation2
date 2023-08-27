@@ -48,6 +48,11 @@ ament_target_dependencies(3_subscriber_node
 "rclcpp" "std_msgs"
 )
 
+add_executable(4_velocity_command demo_cpp/4_velocity_command.cpp)
+ament_target_dependencies(4_velocity_command 
+"rclcpp" "geometry_msgs"
+)
+
 add_executable(demo_mani_ctrl demo_cpp/demo_mani_ctrl.cpp)
 ament_target_dependencies(demo_mani_ctrl
 "rclcpp" "sensor_msgs"
@@ -77,6 +82,7 @@ install(
   TARGETS
     wpb_home_mani_sim
     3_publisher_node 3_subscriber_node
+    4_velocity_command
     demo_mani_ctrl  
     demo_nav2_client
   DESTINATION
