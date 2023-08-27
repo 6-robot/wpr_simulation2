@@ -71,7 +71,7 @@ def generate_launch_description():
             '-entity', "wpb_home",
             '-x', pose_x,
             '-y', pose_y,
-            '-z', pose_theta
+            '-Y', pose_theta
         ],
         output='screen',
     )
