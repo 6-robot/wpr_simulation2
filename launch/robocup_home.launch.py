@@ -50,34 +50,17 @@ def generate_launch_description():
         )
     )
 
-    # robot_state_publisher_cmd = IncludeLaunchDescription(
-    #     PythonLaunchDescriptionSource(
-    #         os.path.join(launch_file_dir, 'robot_state_publisher.launch.py')
-    #     ),
-    #     launch_arguments={'use_sim_time': use_sim_time}.items()
-    # )
-
     spawn_robot_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(launch_file_dir, 'spawn_wpb.launch.py')
         )
     )
 
-    rviz_cmd = Node(
-            package='rviz2',
-            namespace='',
-            executable='rviz2',
-            name='rviz2',
-            arguments=['-d', [os.path.join(get_package_share_directory('wpr_simulation2'), 'rviz', 'sensor.rviz')]]
-        )
-
     ld = LaunchDescription()
 
     # Add the commands to the launch description
     ld.add_action(gzserver_cmd)
     ld.add_action(gzclient_cmd)
-    # ld.add_action(robot_state_publisher_cmd)
     ld.add_action(spawn_robot_cmd)
-    ld.add_action(rviz_cmd)
 
     return ld

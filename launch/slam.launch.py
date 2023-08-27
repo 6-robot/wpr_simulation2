@@ -27,42 +27,12 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     launch_file_dir = os.path.join(get_package_share_directory('wpr_simulation2'), 'launch')
-    pkg_gazebo_ros = get_package_share_directory('gazebo_ros')
 
-    use_sim_time = LaunchConfiguration('use_sim_time', default='true')
-
-    world = os.path.join(
-        get_package_share_directory('wpr_simulation2'),
-        'worlds',
-        'robocup_home.world'
-    )
-
-    gzserver_cmd = IncludeLaunchDescription(
+    gazebo_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(pkg_gazebo_ros, 'launch', 'gzserver.launch.py')
-        ),
-        launch_arguments={'world': world}.items()
-    )
-
-    gzclient_cmd = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(pkg_gazebo_ros, 'launch', 'gzclient.launch.py')
+            os.path.join(launch_file_dir, 'robocup_home.launch.py')
         )
     )
-
-    spawn_robot_cmd = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(launch_file_dir, 'spawn_wpb.launch.py')
-        )
-    )
-
-    # Define the parameters for the SLAM node
-    # slam_params = {
-    #     "use_sim_time": True,
-    #     "base_frame": "base_footprint",
-    #     "odom_frame": "odom",
-    #     "map_frame": "map"
-    # }
 
     slam_cmd = Node(
         package="slam_toolbox",
@@ -76,19 +46,17 @@ def generate_launch_description():
     )
 
     rviz_cmd = Node(
-            package='rviz2',
-            namespace='',
-            executable='rviz2',
-            name='rviz2',
-            arguments=['-d', [os.path.join(get_package_share_directory('wpr_simulation2'), 'rviz', 'slam.rviz')]]
-        )
+        package='rviz2',
+        namespace='',
+        executable='rviz2',
+        name='rviz2',
+        arguments=['-d', [os.path.join(get_package_share_directory('wpr_simulation2'), 'rviz', 'slam.rviz')]]
+    )
 
     ld = LaunchDescription()
 
     # Add the commands to the launch description
-    ld.add_action(gzserver_cmd)
-    ld.add_action(gzclient_cmd)
-    ld.add_action(spawn_robot_cmd)
+    ld.add_action(gazebo_cmd)
     ld.add_action(slam_cmd)
     ld.add_action(rviz_cmd)
 
