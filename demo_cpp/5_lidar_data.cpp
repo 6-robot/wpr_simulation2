@@ -17,7 +17,7 @@ int main(int argc, char** argv)
     setlocale(LC_ALL, "");
     rclcpp::init(argc, argv);
 
-    auto node = std::make_shared<rclcpp::Node>("lidar_data_node");
+    node = std::make_shared<rclcpp::Node>("lidar_data_node");
 
     auto lidar_sub = node->create_subscription<sensor_msgs::msg::LaserScan>("/scan", 10, LidarCallback);
 
