@@ -38,14 +38,9 @@ ament_target_dependencies(wpb_home_mani_sim
 "rclcpp" "std_msgs" "sensor_msgs"
 )
 
-add_executable(mani_test_node demo_cpp/mani_test_node.cpp)
-ament_target_dependencies(mani_test_node
-"rclcpp" "sensor_msgs"
-)
-
 add_executable(demo_mani_ctrl demo_cpp/demo_mani_ctrl.cpp)
 ament_target_dependencies(demo_mani_ctrl
-  "rclcpp" "sensor_msgs"
+"rclcpp" "sensor_msgs"
 )
 
 add_executable(demo_nav2_client demo_cpp/demo_nav2_client.cpp)
@@ -70,7 +65,9 @@ install(DIRECTORY config launch worlds models meshes rviz src map
 
 install(
   TARGETS
-    mani_test_node demo_mani_ctrl wpb_home_mani_sim demo_nav2_client
+    wpb_home_mani_sim
+    demo_mani_ctrl  
+    demo_nav2_client
   DESTINATION
     lib/${PROJECT_NAME}
 )

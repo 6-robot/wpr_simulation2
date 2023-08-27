@@ -1,43 +1,44 @@
-#include <rclcpp/rclcpp.hpp>
+#include "rclcpp/rclcpp.hpp"
 #include "sensor_msgs/msg/joint_state.hpp"
 
-class ManiCtrlNode : public rclcpp::Node
-{
+std::shared_ptr<rclcpp::Node> node;
 
-  rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr publisher_;
-  sensor_msgs::msg::JointState mani_msg_;
-  rclcpp::TimerBase::SharedPtr timer_;
-
-public:
-  ManiCtrlNode() : Node("mani_ctrl_node")
-  {
-    mani_msg_.name.resize(2);
-    mani_msg_.name[0] = "lift";
-    mani_msg_.name[1] = "gripper";
-
-    mani_msg_.position.resize(2);
-    mani_msg_.position[0] = 0.0;
-    mani_msg_.position[1] = 0.0;
-
-    publisher_ = this->create_publisher<sensor_msgs::msg::JointState>("/wpb_home/mani_ctrl", 10);
-    timer_ = this->create_wall_timer(std::chrono::seconds(1),std::bind(&ManiCtrlNode::TimerCallback,this));
-  }
-
-  void TimerCallback()
-  {
-    mani_msg_.position[0] += 0.03;
-    publisher_->publish(mani_msg_);
-
-    RCLCPP_WARN(this->get_logger(),"发送关节控制数据包 h = %.2f",mani_msg_.position[0]);
-  }
-
-};
-
-int main(int argc, char** argv)
+int main(int argc, char * argv[])
 {
   rclcpp::init(argc, argv);
-  auto mani_ctrl_node = std::make_shared<ManiCtrlNode>();
-  rclcpp::spin(mani_ctrl_node);
+
+  node = std::make_shared<rclcpp::Node>("mani_ctrl_node");
+
+  auto mani_pub = node->create_publisher<sensor_msgs::msg::JointState>("/wpb_home/mani_ctrl", 10);
+
+  sensor_msgs::msg::JointState mani_msg;
+
+  mani_msg.name.resize(2);
+  mani_msg.name[0] = "lift";
+  mani_msg.name[1] = "gripper";
+  
+  mani_msg.position.resize(2);
+  mani_msg.position[0] = 0.0;
+  mani_msg.position[1] = 0.0;
+
+  rclcpp::Rate loop_rate(0.3);
+
+  while (rclcpp::ok()) 
+  {
+    RCLCPP_WARN(node->get_logger(), "发送第一个数据包");
+    mani_msg.position[0] = 0.0;
+    mani_msg.position[1] = 0.01;
+    mani_pub->publish(mani_msg);
+    loop_rate.sleep();
+
+    RCLCPP_WARN(node->get_logger(), "发送第二个数据包");
+    mani_msg.position[0] = 1.0;
+    mani_msg.position[1] = 0.1;
+    mani_pub->publish(mani_msg);
+    loop_rate.sleep();
+  }
+  
   rclcpp::shutdown();
+
   return 0;
 }
