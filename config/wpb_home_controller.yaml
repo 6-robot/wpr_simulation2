@@ -1,0 +1,27 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 100  # Hz
+    use_sim_time: true
+
+    manipulator_controller:
+      type: forward_command_controller/ForwardCommandController
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+manipulator_controller:
+  ros__parameters:
+    command_interfaces:
+      - position
+      - velocity
+    state_interfaces:
+      - position
+    joints:
+      - mani_base
+      - elbow_forearm
+      - palm_left_finger
+      - left_finger_tip
+      - palm_right_finger
+      - right_finger_tip
+    interface_name: position
+
