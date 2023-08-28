@@ -41,13 +41,25 @@
 
 <!-- Gazebo plugin for move -->
 <gazebo>
-  <plugin name="green_ball_controller" filename="libgazebo_ros_planar_move.so">
-    <commandTopic>green_ball_vel</commandTopic>
-    <odometryTopic>green_odom</odometryTopic>
-    <odometryFrame>green_odom</odometryFrame>
-    <odometryRate>0.0</odometryRate>
-    <robotBaseFrame>base_link</robotBaseFrame>
-    <broadcastTF>false</broadcastTF>
+  <plugin name="base_controller" filename="libgazebo_ros_planar_move.so">
+    <ros>
+      <namespace>/green_ball</namespace>
+      <remapping>cmd_vel:=cmd_vel</remapping>
+    </ros>
+    <!-- Set control loop update rate -->
+    <update_rate>20</update_rate>
+    <!-- Set odom publish rate -->
+    <publish_rate>20</publish_rate>
+    <!-- Set if odom required -->
+    <publish_odom>false</publish_odom>
+    <publish_odom_tf>false</publish_odom_tf>
+    <!-- Frame IDs -->
+    <odometry_frame>odom</odometry_frame>
+    <robot_base_frame>base_link</robot_base_frame>
+    <!-- Set odom covariance -->
+    <covariance_x>0.0001</covariance_x>
+    <covariance_y>0.0001</covariance_y>
+    <covariance_yaw>0.01</covariance_yaw>
   </plugin>
 </gazebo>
 

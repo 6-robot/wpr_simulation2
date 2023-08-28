@@ -16,6 +16,9 @@ find_package(sensor_msgs REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(nav2_msgs REQUIRED)
+find_package(cv_bridge REQUIRED)
+find_package(image_transport REQUIRED)
+find_package(OpenCV REQUIRED)
 
 link_directories(
   ${GAZEBO_LIBRARY_DIRS}
@@ -26,18 +29,19 @@ include_directories(
   ${GAZEBO_INCLUDE_DIRS}
 )
 
-set(dependencies
-  "geometry_msgs"
-  "nav_msgs"
-  "rclcpp"
-  "sensor_msgs"
-  "tf2"
-  "tf2_geometry_msgs"
-)
-
 add_executable(wpb_home_mani_sim src/wpb_home_mani_sim.cpp)
 ament_target_dependencies(wpb_home_mani_sim 
 "rclcpp" "std_msgs" "sensor_msgs"
+)
+
+add_executable(keyboard_vel_cmd src/keyboard_vel_cmd.cpp)
+ament_target_dependencies(keyboard_vel_cmd 
+"rclcpp" "geometry_msgs"
+)
+
+add_executable(ball_random_move src/ball_random_move.cpp)
+ament_target_dependencies(ball_random_move 
+"rclcpp" "geometry_msgs" 
 )
 
 add_executable(3_publisher_node demo_cpp/3_publisher_node.cpp)
@@ -80,6 +84,21 @@ ament_target_dependencies(8_waypoint_navigation
 "rclcpp" "std_msgs"
 )
 
+add_executable(9_cv_image demo_cpp/9_cv_image.cpp)
+ament_target_dependencies(9_cv_image 
+"rclcpp" "sensor_msgs" "sensor_msgs" "cv_bridge" "image_transport" "OpenCV"
+)
+
+add_executable(9_cv_hsv demo_cpp/9_cv_hsv.cpp)
+ament_target_dependencies(9_cv_hsv 
+"rclcpp" "sensor_msgs" "sensor_msgs" "cv_bridge" "image_transport" "OpenCV"
+)
+
+add_executable(9_cv_follow demo_cpp/9_cv_follow.cpp)
+ament_target_dependencies(9_cv_follow 
+"rclcpp" "sensor_msgs" "sensor_msgs" "cv_bridge" "image_transport" "OpenCV"
+)
+
 add_executable(demo_mani_ctrl demo_cpp/demo_mani_ctrl.cpp)
 ament_target_dependencies(demo_mani_ctrl
 "rclcpp" "sensor_msgs"
@@ -88,11 +107,6 @@ ament_target_dependencies(demo_mani_ctrl
 add_executable(demo_nav2_client demo_cpp/demo_nav2_client.cpp)
 ament_target_dependencies(demo_nav2_client
   "rclcpp" "rclcpp_action" "nav2_msgs"
-)
-
-add_executable(keyboard_vel_cmd src/keyboard_vel_cmd.cpp)
-ament_target_dependencies(keyboard_vel_cmd 
-"rclcpp" "geometry_msgs"
 )
 
 if(BUILD_TESTING)
@@ -112,15 +126,16 @@ install(DIRECTORY config launch demo_launch worlds models meshes rviz src map
 
 install(
   TARGETS
-    wpb_home_mani_sim
+    wpb_home_mani_sim keyboard_vel_cmd ball_random_move
     3_publisher_node 3_subscriber_node
     4_velocity_command
     5_lidar_data 5_lidar_behavior
     6_imu_data 6_imu_behavior
     8_waypoint_navigation
+    9_cv_image 9_cv_hsv
+    9_cv_follow
     demo_mani_ctrl  
     demo_nav2_client
-    keyboard_vel_cmd
   DESTINATION
     lib/${PROJECT_NAME}
 )
