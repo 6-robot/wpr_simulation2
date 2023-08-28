@@ -25,13 +25,13 @@ int main(int argc, char * argv[])
 
   while (rclcpp::ok()) 
   {
-    RCLCPP_WARN(node->get_logger(), "发送第一个数据包");
+    RCLCPP_WARN(node->get_logger(), "Pose 1");
     mani_msg.position[0] = 0.0;
     mani_msg.position[1] = 0.01;
     mani_pub->publish(mani_msg);
     loop_rate.sleep();
 
-    RCLCPP_WARN(node->get_logger(), "发送第二个数据包");
+    RCLCPP_WARN(node->get_logger(), "Pose 2");
     mani_msg.position[0] = 1.0;
     mani_msg.position[1] = 0.1;
     mani_pub->publish(mani_msg);

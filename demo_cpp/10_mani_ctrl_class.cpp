@@ -27,8 +27,6 @@ public:
   {
     mani_msg_.position[0] += 0.03;
     publisher_->publish(mani_msg_);
-
-    RCLCPP_WARN(this->get_logger(),"发送关节控制数据包 h = %.2f",mani_msg_.position[0]);
   }
 
 };

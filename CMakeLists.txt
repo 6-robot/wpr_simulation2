@@ -99,8 +99,13 @@ ament_target_dependencies(9_cv_follow
 "rclcpp" "sensor_msgs" "sensor_msgs" "cv_bridge" "image_transport" "OpenCV"
 )
 
-add_executable(demo_mani_ctrl demo_cpp/demo_mani_ctrl.cpp)
-ament_target_dependencies(demo_mani_ctrl
+add_executable(10_mani_ctrl demo_cpp/10_mani_ctrl.cpp)
+ament_target_dependencies(10_mani_ctrl
+"rclcpp" "sensor_msgs"
+)
+
+add_executable(10_mani_ctrl_class demo_cpp/10_mani_ctrl_class.cpp)
+ament_target_dependencies(10_mani_ctrl_class
 "rclcpp" "sensor_msgs"
 )
 
@@ -132,9 +137,8 @@ install(
     5_lidar_data 5_lidar_behavior
     6_imu_data 6_imu_behavior
     8_waypoint_navigation
-    9_cv_image 9_cv_hsv
-    9_cv_follow
-    demo_mani_ctrl  
+    9_cv_image 9_cv_hsv 9_cv_follow
+    10_mani_ctrl 10_mani_ctrl_class  
     demo_nav2_client
   DESTINATION
     lib/${PROJECT_NAME}
