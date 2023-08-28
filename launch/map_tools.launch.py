@@ -70,7 +70,19 @@ def generate_launch_description():
             package='rviz2',
             executable='rviz2',
             name='rviz2',
-            arguments=['-d', [os.path.join(get_package_share_directory('wpr_simulation2'), 'rviz', 'navi.rviz')]]
+            arguments=['-d', [os.path.join(get_package_share_directory('wp_map_tools'), 'rviz', 'navi.rviz')]]
+        )
+
+    wp_edit_cmd = Node(
+            package='wp_map_tools',
+            executable='wp_edit_node',
+            name='wp_edit_node'
+        )
+    
+    wp_navi_server_cmd = Node(
+            package='wp_map_tools',
+            executable='wp_navi_server',
+            name='wp_navi_server'
         )
 
     ld = LaunchDescription()
@@ -79,5 +91,8 @@ def generate_launch_description():
     ld.add_action(home_cmd)
     ld.add_action(navigation_cmd)
     ld.add_action(rviz_cmd)
+
+    ld.add_action(wp_edit_cmd)
+    ld.add_action(wp_navi_server_cmd)
 
     return ld

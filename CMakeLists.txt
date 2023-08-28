@@ -75,6 +75,11 @@ ament_target_dependencies(6_imu_behavior
 "rclcpp" "sensor_msgs" "tf2" "geometry_msgs"
 )
 
+add_executable(8_waypoint_navigation demo_cpp/8_waypoint_navigation.cpp)
+ament_target_dependencies(8_waypoint_navigation 
+"rclcpp" "std_msgs"
+)
+
 add_executable(demo_mani_ctrl demo_cpp/demo_mani_ctrl.cpp)
 ament_target_dependencies(demo_mani_ctrl
 "rclcpp" "sensor_msgs"
@@ -112,6 +117,7 @@ install(
     4_velocity_command
     5_lidar_data 5_lidar_behavior
     6_imu_data 6_imu_behavior
+    8_waypoint_navigation
     demo_mani_ctrl  
     demo_nav2_client
     keyboard_vel_cmd
