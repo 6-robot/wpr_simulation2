@@ -85,6 +85,11 @@ ament_target_dependencies(demo_nav2_client
   "rclcpp" "rclcpp_action" "nav2_msgs"
 )
 
+add_executable(keyboard_vel_cmd src/keyboard_vel_cmd.cpp)
+ament_target_dependencies(keyboard_vel_cmd 
+"rclcpp" "geometry_msgs"
+)
+
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   # the following line skips the linter which checks for copyrights
@@ -109,6 +114,7 @@ install(
     6_imu_data 6_imu_behavior
     demo_mani_ctrl  
     demo_nav2_client
+    keyboard_vel_cmd
   DESTINATION
     lib/${PROJECT_NAME}
 )

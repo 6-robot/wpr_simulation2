@@ -23,7 +23,8 @@ from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
-
+from launch.actions import OpaqueFunction
+import time
 
 def generate_launch_description():
     launch_file_dir = os.path.join(get_package_share_directory('wpr_simulation2'), 'launch')
@@ -53,6 +54,17 @@ def generate_launch_description():
     spawn_robot_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(launch_file_dir, 'spawn_wpb.launch.py')
+        ),
+        launch_arguments={
+        'pose_x': '-6.0',
+        'pose_y': '-0.5',
+        'pose_theta': '0.0'
+    }.items()
+    )
+
+    spawn_objects = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(launch_file_dir, 'spawn_objects.launch.py')
         )
     )
 
@@ -62,5 +74,6 @@ def generate_launch_description():
     ld.add_action(gzserver_cmd)
     ld.add_action(gzclient_cmd)
     ld.add_action(spawn_robot_cmd)
-
+    ld.add_action(spawn_objects)
+    
     return ld

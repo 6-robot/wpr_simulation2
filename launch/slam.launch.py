@@ -46,7 +46,6 @@ def generate_launch_description():
 
     rviz_cmd = Node(
         package='rviz2',
-        namespace='',
         executable='rviz2',
         name='rviz2',
         arguments=['-d', [os.path.join(get_package_share_directory('wpr_simulation2'), 'rviz', 'slam.rviz')]]

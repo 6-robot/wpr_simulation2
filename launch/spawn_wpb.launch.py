@@ -55,13 +55,13 @@ def generate_launch_description():
     pose_theta = LaunchConfiguration('pose_theta', default='0.0')
 
     # Declare the launch arguments
-    declare_x_position_cmd = DeclareLaunchArgument(
-        'x_pose', default_value='0.0',
-        description='Specify namespace of the robot')
+    # declare_x_position_cmd = DeclareLaunchArgument(
+    #     'x_pose', default_value='0.0',
+    #     description='Specify namespace of the robot')
 
-    declare_y_position_cmd = DeclareLaunchArgument(
-        'y_pose', default_value='0.0',
-        description='Specify namespace of the robot')
+    # declare_y_position_cmd = DeclareLaunchArgument(
+    #     'y_pose', default_value='0.0',
+    #     description='Specify namespace of the robot')
 
     start_gazebo_ros_spawner_cmd = Node(
         package='gazebo_ros',
@@ -79,8 +79,8 @@ def generate_launch_description():
     ld = LaunchDescription()
 
     # Declare the launch options
-    ld.add_action(declare_x_position_cmd)
-    ld.add_action(declare_y_position_cmd)
+    # ld.add_action(declare_x_position_cmd)
+    # ld.add_action(declare_y_position_cmd)
 
     # Add any conditioned actions
     ld.add_action(robot_state_publisher_cmd)

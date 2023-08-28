@@ -246,16 +246,16 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 11.947962760925293
+      Distance: 12.999099731445312
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -0.5878446698188782
-        Y: 0.014699108898639679
-        Z: -0.666007936000824
+        X: -1.0564136505126953
+        Y: -0.08724983781576157
+        Z: -0.9802693128585815
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
