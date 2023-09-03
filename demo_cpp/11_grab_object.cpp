@@ -5,13 +5,13 @@
 #include <wpr_simulation2/msg/object.hpp>
 
 #define STEP_WAIT           0
-#define STEP_ALIGN_OBJ      4
-#define STEP_HAND_UP        5
-#define STEP_FORWARD        6
-#define STEP_GRAB           7
-#define STEP_OBJ_UP         8
-#define STEP_BACKWARD       9
-#define STEP_DONE           10
+#define STEP_ALIGN_OBJ      1
+#define STEP_HAND_UP        2
+#define STEP_FORWARD        3
+#define STEP_GRAB           4
+#define STEP_OBJ_UP         5
+#define STEP_BACKWARD       6
+#define STEP_DONE           7
 static int grab_step = STEP_WAIT;
 
 std::shared_ptr<rclcpp::Node> node;
