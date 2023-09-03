@@ -31,6 +31,12 @@
       <cylinder length="0.2" radius="0.005"/>
     </geometry>
   </collision>
+  <collision>
+    <origin xyz="0 0 0.12" rpy="0 0 0" />
+    <geometry>
+      <cylinder length="0.02" radius="0.04"/>
+    </geometry>
+  </collision>
   <inertial>
     <mass value="0.01"/>
     <inertia ixx="0.538" ixy="0.0" ixz="0.0" iyy="0.538" iyz="0.0" izz="0.076"/>
@@ -51,7 +57,7 @@
     <mu1>50.0</mu1>
     <mu2>50.0</mu2>
     <maxVel>1.0</maxVel>
-    <minDepth>0.001</minDepth>
+    <minDepth>0.05</minDepth>
 </gazebo>
 
 </robot>

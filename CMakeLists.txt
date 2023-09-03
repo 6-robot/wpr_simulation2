@@ -19,6 +19,17 @@ find_package(nav2_msgs REQUIRED)
 find_package(cv_bridge REQUIRED)
 find_package(image_transport REQUIRED)
 find_package(OpenCV REQUIRED)
+find_package(pcl_conversions REQUIRED)
+find_package(pcl_ros REQUIRED)
+find_package(visualization_msgs REQUIRED)
+
+find_package(rosidl_default_generators REQUIRED)
+rosidl_generate_interfaces(${PROJECT_NAME}
+  "msg/Object.msg" 
+  DEPENDENCIES 
+  "std_msgs"
+)
+rosidl_get_typesupport_target(cpp_typesupport_target ${PROJECT_NAME} "rosidl_typesupport_cpp")
 
 link_directories(
   ${GAZEBO_LIBRARY_DIRS}
@@ -43,6 +54,12 @@ add_executable(ball_random_move src/ball_random_move.cpp)
 ament_target_dependencies(ball_random_move 
 "rclcpp" "geometry_msgs" 
 )
+
+add_executable(objects_publisher src/objects_publisher.cpp)
+ament_target_dependencies(objects_publisher
+"rclcpp" "sensor_msgs" "pcl_conversions" "pcl_ros" "std_msgs" "visualization_msgs"
+)
+target_link_libraries(objects_publisher "${cpp_typesupport_target}")
 
 add_executable(3_publisher_node demo_cpp/3_publisher_node.cpp)
 ament_target_dependencies(3_publisher_node 
@@ -109,6 +126,22 @@ ament_target_dependencies(10_mani_ctrl_class
 "rclcpp" "sensor_msgs"
 )
 
+add_executable(11_pointcloud_data demo_cpp/11_pointcloud_data.cpp)
+ament_target_dependencies(11_pointcloud_data
+"rclcpp" "sensor_msgs" "pcl_conversions" "pcl_ros"
+)
+
+add_executable(11_pointcloud_objects demo_cpp/11_pointcloud_objects.cpp)
+ament_target_dependencies(11_pointcloud_objects
+"rclcpp" "sensor_msgs" "pcl_conversions" "pcl_ros"
+)
+
+add_executable(11_grab_object demo_cpp/11_grab_object.cpp)
+ament_target_dependencies(11_grab_object
+"rclcpp" "sensor_msgs" "pcl_conversions" "pcl_ros"
+)
+target_link_libraries(11_grab_object "${cpp_typesupport_target}")
+
 add_executable(demo_nav2_client demo_cpp/demo_nav2_client.cpp)
 ament_target_dependencies(demo_nav2_client
   "rclcpp" "rclcpp_action" "nav2_msgs"
@@ -126,19 +159,20 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
-install(DIRECTORY config launch demo_launch worlds models meshes rviz src map
+install(DIRECTORY config launch demo_launch worlds models meshes rviz src msg map
   DESTINATION share/${PROJECT_NAME})
 
 install(
   TARGETS
-    wpb_home_mani_sim keyboard_vel_cmd ball_random_move
-    3_publisher_node 3_subscriber_node
-    4_velocity_command
-    5_lidar_data 5_lidar_behavior
-    6_imu_data 6_imu_behavior
-    8_waypoint_navigation
-    9_cv_image 9_cv_hsv 9_cv_follow
-    10_mani_ctrl 10_mani_ctrl_class  
+    wpb_home_mani_sim keyboard_vel_cmd ball_random_move objects_publisher
+    3_publisher_node 3_subscriber_node 
+    4_velocity_command 
+    5_lidar_data 5_lidar_behavior 
+    6_imu_data 6_imu_behavior 
+    8_waypoint_navigation 
+    9_cv_image 9_cv_hsv 9_cv_follow 
+    10_mani_ctrl 10_mani_ctrl_class 
+    11_pointcloud_data 11_pointcloud_objects 11_grab_object
     demo_nav2_client
   DESTINATION
     lib/${PROJECT_NAME}

@@ -11,3 +11,4 @@ sudo apt install -y ros-humble-slam-toolbox
 sudo apt install -y ros-humble-teleop-twist-keyboard
 sudo apt install -y ros-humble-navigation2
 sudo apt install -y ros-humble-nav2-bringup
+sudo apt install -y ros-humble-pcl-ros
