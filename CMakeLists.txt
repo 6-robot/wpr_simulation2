@@ -61,6 +61,12 @@ ament_target_dependencies(objects_publisher
 )
 target_link_libraries(objects_publisher "${cpp_typesupport_target}")
 
+add_executable(grab_object_sim src/grab_object_sim.cpp)
+ament_target_dependencies(grab_object_sim
+"rclcpp" "sensor_msgs" "pcl_conversions" "pcl_ros"
+)
+target_link_libraries(grab_object_sim "${cpp_typesupport_target}")
+
 add_executable(3_publisher_node demo_cpp/3_publisher_node.cpp)
 ament_target_dependencies(3_publisher_node 
 "rclcpp" "std_msgs"
@@ -136,6 +142,11 @@ ament_target_dependencies(11_pointcloud_objects
 "rclcpp" "sensor_msgs" "pcl_conversions" "pcl_ros"
 )
 
+add_executable(12_fetch demo_cpp/12_fetch.cpp)
+ament_target_dependencies(12_fetch 
+"rclcpp" "std_msgs" "sensor_msgs"
+)
+
 add_executable(11_grab_object demo_cpp/11_grab_object.cpp)
 ament_target_dependencies(11_grab_object
 "rclcpp" "sensor_msgs" "pcl_conversions" "pcl_ros"
@@ -164,7 +175,7 @@ install(DIRECTORY config launch demo_launch worlds models meshes rviz src msg ma
 
 install(
   TARGETS
-    wpb_home_mani_sim keyboard_vel_cmd ball_random_move objects_publisher
+    wpb_home_mani_sim keyboard_vel_cmd ball_random_move objects_publisher grab_object_sim
     3_publisher_node 3_subscriber_node 
     4_velocity_command 
     5_lidar_data 5_lidar_behavior 
@@ -173,6 +184,7 @@ install(
     9_cv_image 9_cv_hsv 9_cv_follow 
     10_mani_ctrl 10_mani_ctrl_class 
     11_pointcloud_data 11_pointcloud_objects 11_grab_object
+    12_fetch
     demo_nav2_client
   DESTINATION
     lib/${PROJECT_NAME}

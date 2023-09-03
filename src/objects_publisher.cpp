@@ -1,5 +1,6 @@
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/point_cloud2.hpp>
+#include <std_msgs/msg/string.hpp>
 #include <visualization_msgs/msg/marker.hpp>
 #include "visualization_msgs/msg/marker_array.hpp"
 #include <tf2_ros/transform_listener.h>
@@ -46,13 +47,33 @@ public:
     pc_sub_ = this->create_subscription<sensor_msgs::msg::PointCloud2>(
         "/kinect2/sd/points", 10, std::bind(&ObjectsPublisher::pointcloudCallback, this, std::placeholders::_1));
     objects_pub_ = this->create_publisher<wpr_simulation2::msg::Object>("/wpb_home/objects_3d", 10);
-    marker_pub = this->create_publisher<visualization_msgs::msg::MarkerArray>("/objects_marker", 10);
-    nTextNum = 2;
+    marker_pub_ = this->create_publisher<visualization_msgs::msg::MarkerArray>("/objects_marker", 10);
+    behavior_sub_ = this->create_subscription<std_msgs::msg::String>(
+        "/wpb_home/behavior", 10, std::bind(&ObjectsPublisher::behaviorCallback, this, std::placeholders::_1));
+
+    this->declare_parameter<bool>("auto_start",false);
+    this->get_parameter("auto_start", auto_start_param);
+    RCLCPP_INFO(this->get_logger(), "auto_start = %d", auto_start_param);
   }
 
 private:
+  void behaviorCallback(const std_msgs::msg::String::SharedPtr msg)
+  {
+    if(msg->data == "start objects")
+    {
+        auto_start_param = true;
+    }
+
+    if(msg->data == "stop objects")
+    {
+        auto_start_param = false;
+    }
+  }
+
   void pointcloudCallback(const sensor_msgs::msg::PointCloud2::SharedPtr input)
   {
+    if(auto_start_param == false)
+        return;
     // 将点云数值从相机坐标系转换到机器人坐标系
     bool result = tf_buffer_->canTransform("base_footprint", input->header.frame_id, input->header.stamp);
     if (!result)
@@ -191,18 +212,12 @@ private:
             tmpObj.z = object_z;
             tmpObj.probability = 1.0f;
             arObj.push_back(tmpObj);
-
-            // coord.name.push_back(obj_id);
-            // coord.x.push_back(object_x);
-            // coord.y.push_back(object_y);
-            // coord.z.push_back(object_z);
-            // coord.probability.push_back(1.0f);
             nObjCnt++;
             RCLCPP_INFO(this->get_logger(),"[obj_%d] xMin= %.2f yMin = %.2f yMax = %.2f",i,boxMarker.xMin, boxMarker.yMin, boxMarker.yMax);
         } 
     }
     SortObjects();
-    marker_pub->publish(marker_array);
+    marker_pub_->publish(marker_array);
     RCLCPP_INFO(this->get_logger(), "---------------------" );
   }
 
@@ -270,8 +285,6 @@ private:
       text_marker.id = inID;
       text_marker.ns = "line_obj";
       text_marker.action = visualization_msgs::msg::Marker::ADD;
-      text_marker.id = nTextNum;
-      nTextNum++;
       text_marker.type = visualization_msgs::msg::Marker::TEXT_VIEW_FACING;
       text_marker.scale.z = inScale;
       text_marker.color.r = inR;
@@ -342,8 +355,9 @@ private:
   std::shared_ptr<tf2_ros::TransformListener> tf_listener_;
 
   rclcpp::Subscription<sensor_msgs::msg::PointCloud2>::SharedPtr pc_sub_;
+  rclcpp::Subscription<std_msgs::msg::String>::SharedPtr behavior_sub_;
   rclcpp::Publisher<wpr_simulation2::msg::Object>::SharedPtr objects_pub_;
-  rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr marker_pub;
+  rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr marker_pub_;
   stBoxMarker boxMarker;
   std::vector<stObjectDetected> arObj;
   visualization_msgs::msg::Marker line_box;
@@ -351,7 +365,7 @@ private:
   visualization_msgs::msg::Marker text_marker;
 
   visualization_msgs::msg::MarkerArray marker_array;
-  int nTextNum;
+  bool auto_start_param;
 };
 
 int main(int argc, char **argv)

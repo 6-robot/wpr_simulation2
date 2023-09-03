@@ -52,6 +52,16 @@ def generate_launch_description():
             '-entity', 'kitchen_table',
             '-x', '-3.5', '-y', '3.7','-Y', '1.57']
         )
+    spawn_red_bottle = Node(
+            package='gazebo_ros',executable='spawn_entity.py',name='spawn_entity',arguments=['-file', [os.path.join(get_package_share_directory('wpr_simulation2'), 'models', 'bottles', 'red_bottle.model')] , 
+            '-entity', 'red_bottle',
+            '-x', '-3.3', '-y', '3.55','-z', '2']
+        )
+    spawn_green_bottle = Node(
+            package='gazebo_ros',executable='spawn_entity.py',name='spawn_entity',arguments=['-file', [os.path.join(get_package_share_directory('wpr_simulation2'), 'models', 'bottles', 'green_bottle.model')] , 
+            '-entity', 'green_bottle',
+            '-x', '-3.6', '-y', '3.55','-z', '2']
+        )
     
     spawn_cupboard_0 = Node(
             package='gazebo_ros',executable='spawn_entity.py',name='spawn_entity',arguments=['-file', [os.path.join(get_package_share_directory('wpr_simulation2'), 'models', 'cupboard.model')] , 
@@ -108,27 +118,29 @@ def generate_launch_description():
 
     ld = LaunchDescription()
 
-    ld.add_action(TimerAction(period=0.5, actions=[spawn_bed,spawn_sofa,spawn_tea_table,spawn_bookshelft]))
+    ld.add_action(TimerAction(period=1.0, actions=[spawn_bed,spawn_sofa,spawn_tea_table,spawn_bookshelft]))
     # ld.add_action(spawn_bed)
     # ld.add_action(spawn_sofa)
     # ld.add_action(spawn_tea_table)
     # ld.add_action(spawn_bookshelft)
     
-    ld.add_action(TimerAction(period=1.0, actions=[spawn_kitchen_table,spawn_cupboard_0,spawn_cupboard_1]))
+    ld.add_action(TimerAction(period=2.0, actions=[spawn_kitchen_table,spawn_cupboard_0,spawn_cupboard_1]))
     # ld.add_action(spawn_kitchen_table)
     # ld.add_action(spawn_cupboard_0)
     # ld.add_action(spawn_cupboard_1)
     
-    ld.add_action(TimerAction(period=1.5, actions=[spawn_dinning_table_0,spawn_dinning_table_1,spawn_dinning_table_2,spawn_dinning_table_3]))
+    ld.add_action(TimerAction(period=3.0, actions=[spawn_dinning_table_0,spawn_dinning_table_1,spawn_dinning_table_2,spawn_dinning_table_3]))
     # ld.add_action(spawn_dinning_table_0)
     # ld.add_action(spawn_dinning_table_1)
     # ld.add_action(spawn_dinning_table_2)
     # ld.add_action(spawn_dinning_table_3)
     
-    ld.add_action(TimerAction(period=2.0, actions=[spawn_chair_0,spawn_chair_1,spawn_chair_2,spawn_chair_3]))
+    ld.add_action(TimerAction(period=4.0, actions=[spawn_chair_0,spawn_chair_1,spawn_chair_2,spawn_chair_3]))
     # ld.add_action(spawn_chair_0)
     # ld.add_action(spawn_chair_1)
     # ld.add_action(spawn_chair_2)
     # ld.add_action(spawn_chair_3)
+
+    ld.add_action(TimerAction(period=5.0, actions=[spawn_red_bottle,spawn_green_bottle]))
 
     return ld
