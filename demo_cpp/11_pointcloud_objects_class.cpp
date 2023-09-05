@@ -20,7 +20,9 @@ public:
     tf_listener_ = std::make_shared<tf2_ros::TransformListener>(*tf_buffer_);
 
     pc_sub_ = this->create_subscription<sensor_msgs::msg::PointCloud2>(
-        "/kinect2/sd/points", 10, std::bind(&PointcloudObjects::pointcloudCallback, this, std::placeholders::_1));
+        "/kinect2/sd/points", 
+        rclcpp::QoS(rclcpp::QoSInitialization::from_rmw(rmw_qos_profile_default)).best_effort(),
+        std::bind(&PointcloudObjects::pointcloudCallback, this, std::placeholders::_1));
   }
 
 private:
