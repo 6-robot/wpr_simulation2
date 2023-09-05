@@ -30,7 +30,7 @@ int main(int argc, char **argv)
     node = std::make_shared<rclcpp::Node>("cv_image_node");
 
     auto rgb_sub = node->create_subscription<sensor_msgs::msg::Image>(
-        "/kinect2/qhd/image_raw", 1, CamRGBCallback);
+        "/kinect2/qhd/image_color", 1, CamRGBCallback);
 
     cv::namedWindow("RGB");
 
