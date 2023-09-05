@@ -44,8 +44,10 @@ public:
     tf_buffer_ = std::make_shared<tf2_ros::Buffer>(this->get_clock());
     tf_listener_ = std::make_shared<tf2_ros::TransformListener>(*tf_buffer_);
 
-    pc_sub_ = this->create_subscription<sensor_msgs::msg::PointCloud2>(
-        "/kinect2/sd/points", 10, std::bind(&ObjectsPublisher::pointcloudCallback, this, std::placeholders::_1));
+    pc_sub_ = this->ccreate_subscription<sensor_msgs::msg::PointCloud2>(
+        "/kinect2/sd/points", 
+        rclcpp::QoS(rclcpp::QoSInitialization::from_rmw(rmw_qos_profile_default)).best_effort(),
+        std::bind(&PointcloudObjects::pointcloudCallback, this, std::placeholders::_1));
     objects_pub_ = this->create_publisher<wpr_simulation2::msg::Object>("/wpb_home/objects_3d", 10);
     marker_pub_ = this->create_publisher<visualization_msgs::msg::MarkerArray>("/objects_marker", 10);
     behavior_sub_ = this->create_subscription<std_msgs::msg::String>(
