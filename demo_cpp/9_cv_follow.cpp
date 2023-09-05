@@ -126,7 +126,7 @@ int main(int argc, char** argv)
     node = std::make_shared<rclcpp::Node>("cv_follow_node");
 
     vel_pub = node->create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 10);
-    auto sub = node->create_subscription<sensor_msgs::msg::Image>("/kinect2/qhd/image_color", 10, Cam_RGB_Callback);
+    auto sub = node->create_subscription<sensor_msgs::msg::Image>("/kinect2/qhd/image_raw", 10, Cam_RGB_Callback);
 
     rclcpp::spin(node);
     cv::destroyAllWindows();

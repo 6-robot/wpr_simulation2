@@ -105,7 +105,7 @@ int main(int argc, char **argv)
     node = std::make_shared<rclcpp::Node>("cv_hsv_node");
 
     auto rgb_sub = node->create_subscription<sensor_msgs::msg::Image>(
-        "/kinect2/qhd/image_color", 1, CamRGBCallback);
+        "/kinect2/qhd/image_raw", 1, CamRGBCallback);
 
     // Create windows for image display and parameter adjustment
     namedWindow("Threshold", WINDOW_AUTOSIZE);
