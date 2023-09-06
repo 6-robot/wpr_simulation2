@@ -170,7 +170,7 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
-install(DIRECTORY config launch demo_launch worlds models meshes rviz src msg map
+install(DIRECTORY config launch demo_launch worlds models meshes rviz src msg maps
   DESTINATION share/${PROJECT_NAME})
 
 install(
