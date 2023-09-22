@@ -25,15 +25,7 @@ rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr vel_pub; // Velocity pub
 void Cam_RGB_Callback(const sensor_msgs::msg::Image::SharedPtr msg)
 {
     cv_bridge::CvImagePtr cv_ptr;
-    try
-    {
-        cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
-    }
-    catch (cv_bridge::Exception& e)
-    {
-        RCLCPP_ERROR(node->get_logger(), "cv_bridge exception: %s", e.what());
-        return;
-    }
+    cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
 
     Mat imgOriginal = cv_ptr->image;
 

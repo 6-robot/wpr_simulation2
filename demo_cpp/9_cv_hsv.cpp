@@ -20,17 +20,8 @@ static int iHighV = 255;
 
 void CamRGBCallback(const sensor_msgs::msg::Image::SharedPtr msg)
 {
-    // RCLCPP_INFO(rclcpp::get_logger("Cam_RGB_Callback"), "Cam_RGB_Callback");
     cv_bridge::CvImagePtr cv_ptr;
-    try
-    {
-        cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
-    }
-    catch (cv_bridge::Exception& e)
-    {
-        RCLCPP_ERROR(node->get_logger(), "cv_bridge exception: %s", e.what());
-        return;
-    }
+    cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
 
     Mat imgOriginal = cv_ptr->image;
     
