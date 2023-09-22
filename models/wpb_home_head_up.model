@@ -164,7 +164,7 @@
 </link>
 <!--kinect_pitch -->
 <joint name="kinect_pitch" type="fixed">
-  <origin xyz="0 0 0" rpy="0 0.1 0" /> 
+  <origin xyz="0 0 0" rpy="0 -0.1 0" /> 
   <parent link="kinect2_dock" />
   <child link="kinect2_head_frame" />
 </joint>
@@ -225,17 +225,30 @@
     <child link="kinect2_rgb_optical_frame" />
 </joint>
 
-<!-- Gazebo plugin for WPR -->
+<!-- Gazebo plugin for mobile base -->
 <gazebo>
-  <plugin name="base_controller" filename="libwpr_plugin.so">
-    <publishOdometryTf>true</publishOdometryTf>
-    <commandTopic>cmd_vel</commandTopic>
-    <odometryTopic>odom</odometryTopic>
-    <odometryFrame>odom</odometryFrame>
-    <odometryRate>20.0</odometryRate>
-    <robotBaseFrame>base_footprint</robotBaseFrame>
+  <plugin name="base_controller" filename="libgazebo_ros_planar_move.so">
+    <ros>
+      <!-- <namespace>/wpb</namespace> -->
+      <remapping>cmd_vel:=cmd_vel</remapping>
+      <remapping>odom:=odom</remapping>
+    </ros>
+    <!-- Set control loop update rate -->
+    <update_rate>100</update_rate>
+    <!-- Set odom publish rate -->
+    <publish_rate>20</publish_rate>
+    <!-- Set if odom required -->
+    <publish_odom>true</publish_odom>
+    <publish_odom_tf>true</publish_odom_tf>
+    <!-- Frame IDs -->
+    <odometry_frame>odom</odometry_frame>
+    <robot_base_frame>base_footprint</robot_base_frame>
+    <!-- Set odom covariance -->
+    <covariance_x>0.0001</covariance_x>
+    <covariance_y>0.0001</covariance_y>
+    <covariance_yaw>0.01</covariance_yaw>
   </plugin>
-</gazebo>
+</gazebo> 
 
 <!-- Gazebo plugin for RpLidar A2 -->
 <!-- <gazebo reference="laser">
@@ -292,23 +305,20 @@
           <stddev>0.07</stddev>
       </noise>
     </camera>
-    <plugin name="kinect2_depth_control" filename="libgazebo_ros_openni_kinect.so">
-        <cameraName>kinect2/sd</cameraName>
-        <alwaysOn>true</alwaysOn>
-        <updateRate>20.0</updateRate>
-        <imageTopicName>image_ir_rect</imageTopicName>
-        <depthImageTopicName>image_depth_rect</depthImageTopicName>
-        <pointCloudTopicName>points</pointCloudTopicName>
-        <cameraInfoTopicName>depth_camera_info</cameraInfoTopicName>
-        <frameName>kinect2_ir_optical_frame</frameName>
-        <pointCloudCutoff>0.5</pointCloudCutoff>
-        <pointCloudCutoffMax>6.0</pointCloudCutoffMax>
-        <baseline>0.1</baseline>
-        <distortionK1>0.0</distortionK1>
-        <distortionK2>0.0</distortionK2>
-        <distortionK3>0.0</distortionK3>
-        <distortionT1>0.0</distortionT1>
-        <distortionT2>0.0</distortionT2>
+    <plugin name="kinect2_depth_control" filename="libgazebo_ros_camera.so">
+        <ros>
+          <namespace>kinect2</namespace>
+          <remapping>custom_camera/image_raw:=image_color_rect</remapping>
+          <remapping>custom_camera/image_depth:=image_depth_rect</remapping>
+          <remapping>custom_camera/camera_info:=camera_info</remapping>
+          <remapping>custom_camera/camera_info_depth:=/depth_camera_info</remapping>
+          <remapping>custom_camera/points:=points</remapping>
+        </ros>
+        <camera_name>sd</camera_name>
+        <frame_name>kinect2_ir_optical_frame</frame_name>
+        <hack_baseline>0.1</hack_baseline>
+        <min_depth>0.001</min_depth>
+        <max_depth>300.0</max_depth>
     </plugin>
   </sensor>
 </gazebo>
@@ -316,12 +326,12 @@
     <sensor type="camera" name="kinect2_rgb_sensor">
         <always_on>true</always_on>
         <update_rate>20.0</update_rate>
-        <camera name="kinect2_rgb_sensor">
+        <camera name="hd">
           <horizontal_fov>1.221730456</horizontal_fov>
           <image>
               <width>1920</width>
               <height>1080</height>
-              <format>R8G8B8</format>
+              <format>B8G8R8</format>
           </image>
           <clip>
               <near>0.2</near>
@@ -334,18 +344,15 @@
           </noise>
         </camera>
         <plugin name="kinect2_rgb_controller" filename="libgazebo_ros_camera.so">
-          <alwaysOn>true</alwaysOn>
-          <update_rate>20.0</update_rate>
-          <cameraName>kinect2/hd</cameraName>
-          <imageTopicName>image_color_rect</imageTopicName>
-          <cameraInfoTopicName>camera_info</cameraInfoTopicName>
-          <frameName>kinect2_rgb_optical_frame</frameName>
-          <baseline>0.1</baseline>
-          <distortionK1>0.0</distortionK1>
-          <distortionK2>0.0</distortionK2>
-          <distortionK3>0.0</distortionK3>
-          <distortionT1>0.0</distortionT1>
-          <distortionT2>0.0</distortionT2>
+          <ros>
+            <namespace>kinect2</namespace>
+            <remapping>image_raw:=image_color_rect</remapping>
+            <remapping>camera_info:=camera_info</remapping>
+          </ros>
+          <camera_name>hd</camera_name>
+          <frame_name>kinect2_rgb_optical_frame</frame_name>
+
+          <hack_baseline>0.1</hack_baseline>
         </plugin>
     </sensor>
 </gazebo>
@@ -354,7 +361,7 @@
     <sensor type="camera" name="kinect2_qhd_rgb_sensor">
         <always_on>true</always_on>
         <update_rate>20.0</update_rate>
-        <camera name="kinect2_qhd_rgb_sensor">
+        <camera name="qhd">
           <horizontal_fov>1.221730456</horizontal_fov>
           <image>
               <width>960</width>
@@ -367,18 +374,15 @@
           </clip>
         </camera>
         <plugin name="kinect2_qhd_rgb_controller" filename="libgazebo_ros_camera.so">
-          <alwaysOn>true</alwaysOn>
-          <update_rate>20.0</update_rate>
-          <cameraName>kinect2/qhd</cameraName>
-          <imageTopicName>image_color_rect</imageTopicName>
-          <cameraInfoTopicName>camera_info</cameraInfoTopicName>
-          <frameName>kinect2_head_frame</frameName>
-          <baseline>0.1</baseline>
-          <distortionK1>0.0</distortionK1>
-          <distortionK2>0.0</distortionK2>
-          <distortionK3>0.0</distortionK3>
-          <distortionT1>0.0</distortionT1>
-          <distortionT2>0.0</distortionT2>
+          <ros>
+            <namespace>kinect2</namespace>
+            <remapping>image_raw:=image_color_rect</remapping>
+            <remapping>camera_info:=camera_info</remapping>
+          </ros>
+          <camera_name>qhd</camera_name>
+          <frame_name>kinect2_head_frame</frame_name>
+
+          <hack_baseline>0.1</hack_baseline>
         </plugin>
     </sensor>
 </gazebo>
