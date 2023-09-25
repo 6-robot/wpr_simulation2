@@ -69,6 +69,11 @@ ament_target_dependencies(grab_object_sim
 )
 target_link_libraries(grab_object_sim "${cpp_typesupport_target}")
 
+add_executable(3_my_node demo_cpp/3_my_node.cpp)
+ament_target_dependencies(3_my_node 
+"rclcpp"
+)
+
 add_executable(3_publisher_node demo_cpp/3_publisher_node.cpp)
 ament_target_dependencies(3_publisher_node 
 "rclcpp" "std_msgs"
