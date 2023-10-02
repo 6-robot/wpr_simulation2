@@ -14,7 +14,7 @@ int main(int argc, char * argv[])
 
  node = std::make_shared<rclcpp::Node>("subscriber_node");
 
-  auto subscriber= node->create_subscription<std_msgs::msg::String>("/topic", 10, &Callback);
+  auto subscriber= node->create_subscription<std_msgs::msg::String>("/my_topic", 10, &Callback);
 
   rclcpp::spin(node);
   

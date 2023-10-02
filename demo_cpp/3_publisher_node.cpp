@@ -7,7 +7,7 @@ int main(int argc, char * argv[])
 
   auto node = std::make_shared<rclcpp::Node>("publisher_node");
 
-  auto publisher = node->create_publisher<std_msgs::msg::String>("/topic", 10);
+  auto publisher = node->create_publisher<std_msgs::msg::String>("/my_topic", 10);
 
   std_msgs::msg::String message;
   message.data = "Hello World!";
