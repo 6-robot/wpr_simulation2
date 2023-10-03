@@ -1,0 +1,9 @@
+launch:
+- node:
+    pkg: "topic_pkg"
+    exec: "publisher_node"
+    name: "publisher_node"
+- node:
+    pkg: "topic_pkg"
+    exec: "subscriber_node"
+    name: "subscriber_node"
