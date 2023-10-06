@@ -48,7 +48,6 @@ void GrabResultCallback(const std_msgs::msg::String::SharedPtr msg)
 
 int main(int argc, char** argv)
 {
-    setlocale(LC_ALL, "");
     rclcpp::init(argc, argv);
 
     node = std::make_shared<rclcpp::Node>("fetch_node");

@@ -37,7 +37,6 @@ void IMUCallback(const sensor_msgs::msg::Imu::SharedPtr msg)
 
 int main(int argc, char** argv)
 {
-    setlocale(LC_ALL, "");
     rclcpp::init(argc, argv);
 
     node = rclcpp::Node::make_shared("demo_imu_behavior");

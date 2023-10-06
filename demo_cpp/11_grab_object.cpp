@@ -39,7 +39,6 @@ void ObjectCallback(const wpr_simulation2::msg::Object::SharedPtr msg)
 
 int main(int argc, char** argv)
 {
-    setlocale(LC_ALL, "");
     rclcpp::init(argc, argv);
 
     node = std::make_shared<rclcpp::Node>("grab_node");

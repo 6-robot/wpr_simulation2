@@ -36,7 +36,6 @@ void LidarCallback(const sensor_msgs::msg::LaserScan::SharedPtr msg)
 
 int main(int argc, char** argv)
 {
-    setlocale(LC_ALL, "");
     rclcpp::init(argc, argv);
 
     node = std::make_shared<rclcpp::Node>("lidar_behavior_node");
