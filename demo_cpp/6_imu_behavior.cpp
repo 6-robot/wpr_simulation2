@@ -24,14 +24,12 @@ void IMUCallback(const sensor_msgs::msg::Imu::SharedPtr msg)
     yaw = yaw * 180 / M_PI;
     RCLCPP_INFO(node->get_logger(), "roll= %.0f pitch= %.0f yaw= %.0f", roll, pitch, yaw);
 
-    geometry_msgs::msg::Twist vel_msg;
-
     double target_yaw = 90;
 
+    geometry_msgs::msg::Twist vel_msg;
     double diff_angle = target_yaw - yaw;
     vel_msg.angular.z = diff_angle * 0.01;
     vel_msg.linear.x = 0.1;
-
     vel_pub->publish(vel_msg);
 }
 
@@ -39,11 +37,10 @@ int main(int argc, char** argv)
 {
     rclcpp::init(argc, argv);
 
-    node = rclcpp::Node::make_shared("demo_imu_behavior");
+    node = rclcpp::Node::make_shared("imu_behavior_node");
 
     auto sub = node->create_subscription<sensor_msgs::msg::Imu>("imu", 100, IMUCallback);
 
-    // 发布速度控制话题
     vel_pub = node->create_publisher<geometry_msgs::msg::Twist>("/cmd_vel", 10);
 
     rclcpp::spin(node);
