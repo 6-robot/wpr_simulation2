@@ -5,7 +5,7 @@ std::shared_ptr<rclcpp::Node> node;
 
 void ResultCallback(const std_msgs::msg::String::SharedPtr msg)
 {
-    if(msg->data == "done")
+    if(msg->data == "navi done")
     {
         RCLCPP_INFO(node->get_logger(), "Arrived !");
     }
@@ -18,7 +18,7 @@ int main(int argc, char** argv)
     auto navigation_pub = node->create_publisher<std_msgs::msg::String>(
     "/waterplus/navi_waypoint", 10);
 
-    auto lidar_sub = node->create_subscription<std_msgs::msg::String>(
+    auto result_sub = node->create_subscription<std_msgs::msg::String>(
     "/waterplus/navi_result", 10, ResultCallback);
 
     rclcpp::sleep_for(std::chrono::milliseconds(1000));
