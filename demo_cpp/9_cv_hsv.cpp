@@ -1,6 +1,6 @@
 #include <rclcpp/rclcpp.hpp>
-#include <cv_bridge/cv_bridge.h>
 #include <sensor_msgs/msg/image.hpp>
+#include <cv_bridge/cv_bridge.h>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp> 
 
@@ -27,22 +27,24 @@ void CamRGBCallback(const sensor_msgs::msg::Image::SharedPtr msg)
     
     // Convert RGB image to HSV
     Mat imgHSV;
-    vector<Mat> hsvSplit;
     cvtColor(imgOriginal, imgHSV, COLOR_BGR2HSV);
 
     // Perform histogram equalization in the HSV space
+    vector<Mat> hsvSplit;
     split(imgHSV, hsvSplit);
     equalizeHist(hsvSplit[2], hsvSplit[2]);
     merge(hsvSplit, imgHSV);
-    Mat imgThresholded;
 
     // Threshold the image using the specified Hue, Saturation, and Value thresholds
-    inRange(imgHSV, Scalar(iLowH, iLowS, iLowV), Scalar(iHighH, iHighS, iHighV), imgThresholded); 
+    Mat imgThresholded;
+    inRange(imgHSV, 
+        Scalar(iLowH, iLowS, iLowV), 
+        Scalar(iHighH, iHighS, iHighV), 
+        imgThresholded); 
 
-    // Opening operation (remove some noise)
     Mat element = getStructuringElement(MORPH_RECT, Size(5, 5));
+    // Opening operation (remove some noise)
     morphologyEx(imgThresholded, imgThresholded, MORPH_OPEN, element);
-
     // Closing operation (connect some regions)
     morphologyEx(imgThresholded, imgThresholded, MORPH_CLOSE, element);
 
@@ -52,7 +54,6 @@ void CamRGBCallback(const sensor_msgs::msg::Image::SharedPtr msg)
     int nPixCount = 0;
     int nImgWidth = imgThresholded.cols;
     int nImgHeight = imgThresholded.rows;
-    int nImgChannels = imgThresholded.channels();
     for (int y = 0; y < nImgHeight; y++)
     {
         for (int x = 0; x < nImgWidth; x++)
@@ -69,7 +70,7 @@ void CamRGBCallback(const sensor_msgs::msg::Image::SharedPtr msg)
     {
         nTargetX /= nPixCount;
         nTargetY /= nPixCount;
-        printf("Color centroid coordinates (%d, %d) Point count = %d\n", nTargetX, nTargetY, nPixCount);
+        printf("Target (%d, %d) PixelCount = %d\n", nTargetX, nTargetY, nPixCount);
         // Draw coordinates
         Point line_begin = Point(nTargetX - 10, nTargetY);
         Point line_end = Point(nTargetX + 10, nTargetY);
@@ -80,7 +81,7 @@ void CamRGBCallback(const sensor_msgs::msg::Image::SharedPtr msg)
     }
     else
     {
-        printf("Target color disappeared...\n");
+        printf("Target disappeared...\n");
     }
 
     // Display the processed images
@@ -101,8 +102,6 @@ int main(int argc, char **argv)
     // Create windows for image display and parameter adjustment
     namedWindow("Threshold", WINDOW_AUTOSIZE);
 
-    // createTrackbar( "LowH", "Threshold", nullptr, 179, 0 );
-    // setTrackbarPos( "LowH", "Threshold", iLowH);
     createTrackbar("LowH", "Threshold", &iLowH, 179); //Hue (0 - 179)
     createTrackbar("HighH", "Threshold", &iHighH, 179);
 
