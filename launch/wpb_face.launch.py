@@ -87,6 +87,6 @@ def generate_launch_description():
 
     ld.add_action(spawn_robot_cmd)
     ld.add_action(spawn_kai)
-    ld.add_action(detect_faces_cmd)
+    #ld.add_action(detect_faces_cmd)
 
     return ld
