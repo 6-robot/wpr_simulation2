@@ -59,7 +59,7 @@ def generate_launch_description():
 
     spawn_robot_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(launch_file_dir, 'spawn_wpb.launch.py')
+            os.path.join(launch_file_dir, 'spawn_wpb_lidar.launch.py')
         )
     )
 
