@@ -144,13 +144,13 @@ ament_target_dependencies(10_mani_ctrl_class
 "rclcpp" "sensor_msgs"
 )
 
-add_executable(11_pointcloud_data demo_cpp/11_pointcloud_data.cpp)
-ament_target_dependencies(11_pointcloud_data
+add_executable(10_pc_data demo_cpp/10_pc_data.cpp)
+ament_target_dependencies(10_pc_data
 "rclcpp" "sensor_msgs" "pcl_conversions" "pcl_ros"
 )
 
-add_executable(11_pointcloud_objects demo_cpp/11_pointcloud_objects.cpp)
-ament_target_dependencies(11_pointcloud_objects
+add_executable(10_pc_objects demo_cpp/10_pc_objects.cpp)
+ament_target_dependencies(10_pc_objects
 "rclcpp" "sensor_msgs" "pcl_conversions" "pcl_ros"
 )
 
@@ -203,8 +203,8 @@ install(
     6_imu_data 6_imu_behavior 
     8_waypoint_navigation 
     9_cv_image 9_cv_hsv 9_cv_follow 9_cv_face_detect
-    10_mani_ctrl 10_mani_ctrl_class 
-    11_pointcloud_data 11_pointcloud_objects 11_grab_object
+    10_pc_data 10_pc_objects 
+    10_mani_ctrl 10_mani_ctrl_class 11_grab_object
     12_fetch
     demo_nav2_client
   DESTINATION

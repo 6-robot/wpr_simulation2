@@ -16,18 +16,27 @@ std::shared_ptr<tf2_ros::TransformListener> tf_listener_;
 
 void PointcloudCallback(const sensor_msgs::msg::PointCloud2::SharedPtr msg)
 {
-  bool result = tf_buffer_->canTransform("base_footprint", msg->header.frame_id, msg->header.stamp);
+  bool result = tf_buffer_->canTransform(
+    "base_footprint", 
+    msg->header.frame_id, 
+    msg->header.stamp
+    );
   if (!result)
   {
     return;
   }
   sensor_msgs::msg::PointCloud2 pc_footprint;
-  pcl_ros::transformPointCloud("base_footprint", *msg, pc_footprint, *tf_buffer_);
+  pcl_ros::transformPointCloud(
+    "base_footprint", 
+    *msg, 
+    pc_footprint, 
+    *tf_buffer_
+    );
 
-  pcl::PointCloud<pcl::PointXYZRGB> cloud_src;
+  pcl::PointCloud<pcl::PointXYZ> cloud_src;
   pcl::fromROSMsg(pc_footprint, cloud_src);
 
-  pcl::PassThrough<pcl::PointXYZRGB> pass;
+  pcl::PassThrough<pcl::PointXYZ> pass;
   pass.setInputCloud(cloud_src.makeShared());
   pass.setFilterFieldName("x");
   pass.setFilterLimits(0.5, 1.5);
@@ -42,7 +51,7 @@ void PointcloudCallback(const sensor_msgs::msg::PointCloud2::SharedPtr msg)
   pass.filter(cloud_src);
 
   pcl::ModelCoefficients::Ptr coefficients(new pcl::ModelCoefficients);
-  pcl::SACSegmentation<pcl::PointXYZRGB> segmentation;
+  pcl::SACSegmentation<pcl::PointXYZ> segmentation;
   segmentation.setInputCloud(cloud_src.makeShared());
   segmentation.setModelType(pcl::SACMODEL_PLANE);
   segmentation.setMethodType(pcl::SAC_RANSAC);
@@ -67,19 +76,17 @@ void PointcloudCallback(const sensor_msgs::msg::PointCloud2::SharedPtr msg)
   pass.setFilterLimits(plane_height + 0.2, 1.5);
   pass.filter(cloud_src);
 
-  pcl::search::KdTree<pcl::PointXYZRGB>::Ptr tree(new pcl::search::KdTree<pcl::PointXYZRGB>);
+  pcl::search::KdTree<pcl::PointXYZ>::Ptr tree(new pcl::search::KdTree<pcl::PointXYZ>);
   tree->setInputCloud(cloud_src.makeShared()); 
 
   std::vector<pcl::PointIndices> cluster_indices;
-  pcl::EuclideanClusterExtraction<pcl::PointXYZRGB> ec;
+  pcl::EuclideanClusterExtraction<pcl::PointXYZ> ec;
   ec.setClusterTolerance(0.1);
   ec.setMinClusterSize(100);
   ec.setMaxClusterSize(25000);
   ec.setSearchMethod(tree);
   ec.setInputCloud(cloud_src.makeShared());
   ec.extract(cluster_indices);
-  RCLCPP_INFO(node->get_logger(), "Number of clusters: %d", (int)cluster_indices.size());
-
   int object_num = cluster_indices.size(); 
   RCLCPP_INFO(node->get_logger(), "object_num = %d",object_num);
   for(int i = 0 ; i < object_num ; i ++)
@@ -98,7 +105,14 @@ void PointcloudCallback(const sensor_msgs::msg::PointCloud2::SharedPtr msg)
       float object_x = points_x_sum/point_num;
       float object_y = points_y_sum/point_num;
       float object_z = points_z_sum/point_num;
-      RCLCPP_INFO(node->get_logger(), "object %d pos = ( %.2f , %.2f , %.2f)" ,i, object_x,object_y,object_z);
+      RCLCPP_INFO(
+          node->get_logger(), 
+          "object-%d pos=( %.2f , %.2f , %.2f)" ,
+          i, 
+          object_x,
+          object_y,
+          object_z
+        );
   }
   RCLCPP_INFO(node->get_logger(), "---------------------" );
 }
@@ -114,7 +128,7 @@ int main(int argc, char **argv)
 
   auto pc_sub = node->create_subscription<sensor_msgs::msg::PointCloud2>(
     "/kinect2/sd/points",
-    rclcpp::QoS(rclcpp::QoSInitialization::from_rmw(rmw_qos_profile_default)).best_effort(),
+    1,
     PointcloudCallback
   );
 

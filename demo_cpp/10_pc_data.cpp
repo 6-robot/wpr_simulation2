@@ -29,7 +29,7 @@ int main(int argc, char **argv)
   node = std::make_shared<rclcpp::Node>("pointcloud_data_node");
   auto pc_sub = node->create_subscription<sensor_msgs::msg::PointCloud2>(
     "/kinect2/sd/points",
-    rclcpp::QoS(rclcpp::QoSInitialization::from_rmw(rmw_qos_profile_default)).best_effort(),
+    1,
     PointcloudCallback
   );
 
