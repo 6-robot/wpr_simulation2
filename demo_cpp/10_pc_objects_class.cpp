@@ -1,28 +1,28 @@
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/point_cloud2.hpp>
-#include <tf2_ros/transform_listener.h>
 #include <pcl/point_types.h>
 #include <pcl_conversions/pcl_conversions.h>
+#include <tf2_ros/transform_listener.h>
 #include <pcl_ros/transforms.hpp>
 #include <pcl/filters/passthrough.h>
-#include <pcl/filters/extract_indices.h>
+#include <pcl/search/kdtree.h>
 #include <pcl/segmentation/sac_segmentation.h>
 #include <pcl/segmentation/extract_clusters.h>
-#include <pcl/search/kdtree.h>
 
 class PointcloudObjects : public rclcpp::Node
 {
 public:
   PointcloudObjects()
-  : Node("pointcloud_cluster")
+  : Node("pointcloud_objects_node")
   {
     tf_buffer_ = std::make_shared<tf2_ros::Buffer>(this->get_clock());
     tf_listener_ = std::make_shared<tf2_ros::TransformListener>(*tf_buffer_);
 
     pc_sub_ = this->create_subscription<sensor_msgs::msg::PointCloud2>(
-        "/kinect2/sd/points", 
-        1,
-        std::bind(&PointcloudObjects::pointcloudCallback, this, std::placeholders::_1));
+      "/kinect2/sd/points", 
+      1,
+      std::bind(&PointcloudObjects::pointcloudCallback, this, std::placeholders::_1)
+    );
   }
 
 private:
@@ -127,11 +127,12 @@ private:
         float object_z = points_z_sum/point_num;
         RCLCPP_INFO(
           this->get_logger(), 
-          "object %d pos = ( %.2f , %.2f , %.2f)" ,
+          "object %d pos=(%.2f , %.2f , %.2f)",
           i, 
           object_x,
           object_y,
-          object_z);
+          object_z
+        );
     }
     RCLCPP_INFO(this->get_logger(), "---------------------" );
   }

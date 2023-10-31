@@ -1,14 +1,13 @@
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/point_cloud2.hpp>
-#include <tf2_ros/transform_listener.h>
 #include <pcl/point_types.h>
 #include <pcl_conversions/pcl_conversions.h>
+#include <tf2_ros/transform_listener.h>
 #include <pcl_ros/transforms.hpp>
 #include <pcl/filters/passthrough.h>
-#include <pcl/filters/extract_indices.h>
+#include <pcl/search/kdtree.h>
 #include <pcl/segmentation/sac_segmentation.h>
 #include <pcl/segmentation/extract_clusters.h>
-#include <pcl/search/kdtree.h>
 
 std::shared_ptr<rclcpp::Node> node;
 tf2_ros::Buffer::SharedPtr tf_buffer_;
@@ -20,7 +19,7 @@ void PointcloudCallback(const sensor_msgs::msg::PointCloud2::SharedPtr msg)
     "base_footprint", 
     msg->header.frame_id, 
     msg->header.stamp
-    );
+  );
   if (!result)
   {
     return;
@@ -31,7 +30,7 @@ void PointcloudCallback(const sensor_msgs::msg::PointCloud2::SharedPtr msg)
     *msg, 
     pc_footprint, 
     *tf_buffer_
-    );
+  );
 
   pcl::PointCloud<pcl::PointXYZ> cloud_src;
   pcl::fromROSMsg(pc_footprint, cloud_src);
@@ -106,13 +105,13 @@ void PointcloudCallback(const sensor_msgs::msg::PointCloud2::SharedPtr msg)
       float object_y = points_y_sum/point_num;
       float object_z = points_z_sum/point_num;
       RCLCPP_INFO(
-          node->get_logger(), 
-          "object-%d pos=( %.2f , %.2f , %.2f)" ,
-          i, 
-          object_x,
-          object_y,
-          object_z
-        );
+        node->get_logger(), 
+        "object %d pos=(%.2f , %.2f , %.2f)",
+        i, 
+        object_x,
+        object_y,
+        object_z
+      );
   }
   RCLCPP_INFO(node->get_logger(), "---------------------" );
 }
