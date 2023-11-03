@@ -134,16 +134,6 @@ ament_target_dependencies(9_cv_face_detect
 "rclcpp" "sensor_msgs" "sensor_msgs" "cv_bridge" "image_transport" "OpenCV"
 )
 
-add_executable(10_mani_ctrl demo_cpp/10_mani_ctrl.cpp)
-ament_target_dependencies(10_mani_ctrl
-"rclcpp" "sensor_msgs"
-)
-
-add_executable(10_mani_ctrl_class demo_cpp/10_mani_ctrl_class.cpp)
-ament_target_dependencies(10_mani_ctrl_class
-"rclcpp" "sensor_msgs"
-)
-
 add_executable(10_pc_data demo_cpp/10_pc_data.cpp)
 ament_target_dependencies(10_pc_data
 "rclcpp" "sensor_msgs" "pcl_conversions" "pcl_ros"
@@ -154,9 +144,9 @@ ament_target_dependencies(10_pc_objects
 "rclcpp" "sensor_msgs" "pcl_conversions" "pcl_ros"
 )
 
-add_executable(12_fetch demo_cpp/12_fetch.cpp)
-ament_target_dependencies(12_fetch 
-"rclcpp" "std_msgs" "sensor_msgs"
+add_executable(11_mani_ctrl demo_cpp/11_mani_ctrl.cpp)
+ament_target_dependencies(11_mani_ctrl
+"rclcpp" "sensor_msgs"
 )
 
 add_executable(11_grab_object demo_cpp/11_grab_object.cpp)
@@ -164,6 +154,11 @@ ament_target_dependencies(11_grab_object
 "rclcpp" "sensor_msgs" "pcl_conversions" "pcl_ros"
 )
 target_link_libraries(11_grab_object "${cpp_typesupport_target}")
+
+add_executable(12_fetch demo_cpp/12_fetch.cpp)
+ament_target_dependencies(12_fetch 
+"rclcpp" "std_msgs" "sensor_msgs"
+)
 
 add_executable(demo_nav2_client demo_cpp/demo_nav2_client.cpp)
 ament_target_dependencies(demo_nav2_client
@@ -204,7 +199,7 @@ install(
     8_waypoint_navigation 
     9_cv_image 9_cv_hsv 9_cv_follow 9_cv_face_detect
     10_pc_data 10_pc_objects 
-    10_mani_ctrl 10_mani_ctrl_class 11_grab_object
+    11_mani_ctrl 11_grab_object
     12_fetch
     demo_nav2_client
   DESTINATION

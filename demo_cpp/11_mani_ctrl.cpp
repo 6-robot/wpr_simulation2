@@ -9,7 +9,10 @@ int main(int argc, char * argv[])
 
   node = std::make_shared<rclcpp::Node>("mani_ctrl_node");
 
-  auto mani_pub = node->create_publisher<sensor_msgs::msg::JointState>("/wpb_home/mani_ctrl", 10);
+  auto mani_pub = node->create_publisher<sensor_msgs::msg::JointState>(
+    "/wpb_home/mani_ctrl", 
+    10
+  );
 
   sensor_msgs::msg::JointState mani_msg;
 
@@ -21,7 +24,7 @@ int main(int argc, char * argv[])
   mani_msg.position[0] = 0.0;
   mani_msg.position[1] = 0.0;
 
-  rclcpp::Rate loop_rate(0.3);
+  rclcpp::Rate loop_rate(0.1);
 
   while (rclcpp::ok()) 
   {
