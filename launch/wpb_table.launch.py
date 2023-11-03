@@ -34,7 +34,7 @@ def generate_launch_description():
     world = os.path.join(
         get_package_share_directory('wpr_simulation2'),
         'worlds',
-        'wpb_simple.world'
+        'table.world'
     )
 
     gzserver_cmd = IncludeLaunchDescription(
@@ -117,6 +117,6 @@ def generate_launch_description():
     ld.add_action(spawn_table)
     ld.add_action(spawn_red_bottle)
     ld.add_action(spawn_green_bottle)
-    ld.add_action(rviz_cmd)
+    # ld.add_action(rviz_cmd)
 
     return ld
