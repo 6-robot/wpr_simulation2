@@ -22,7 +22,6 @@ rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr mani_pub;
 float object_x = 0.0;
 float object_y = 0.0;
 float object_z = 0.0;
-int count = 0;
 
 float align_x = 1.0;
 float align_y = 0.0;
