@@ -42,7 +42,7 @@
   </collision>
   <inertial>
     <mass value="25"/>
-    <inertia ixx="4.00538" ixy="0.0" ixz="0.0" iyy="4.00538" iyz="0.0" izz="0.51076"/>
+    <inertia ixx="2.800955" ixy="0.0" ixz="0.0" iyy="2.800955" iyz="0.0" izz="0.76645"/>
   </inertial>
 </link>
 <joint name = "base_to_body" type = "fixed">
@@ -60,7 +60,7 @@
   </collision>
   <inertial>
     <mass value="0.01"/>
-    <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01"/>
+    <inertia ixx="0.000069" ixy="0.0" ixz="0.0" iyy="0.000090" iyz="0.0" izz="0.001086"/>
   </inertial>
 </link>
 <joint name = "body_to_top" type = "fixed">
@@ -78,7 +78,7 @@
   </collision>
   <inertial>
     <mass value="0.01"/>
-    <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01"/>
+    <inertia ixx="0.001487" ixy="0.0" ixz="0.0" iyy="0.000086" iyz="0.0" izz="0.000091"/>
   </inertial>
 </link>
 <joint name = "body_to_back" type = "fixed">
@@ -96,7 +96,7 @@
   </collision>
   <inertial>
     <mass value="0.01"/>
-    <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01"/>
+    <inertia ixx="0.000202" ixy="0.0" ixz="0.0" iyy="0.000008" iyz="0.0" izz="0.000262"/>
   </inertial>
 </link>
 <joint name = "body_to_head" type = "fixed">
@@ -114,7 +114,7 @@
   </collision>
   <inertial>
     <mass value="2.8"/>
-    <inertia ixx="0.441687775" ixy="0.0" ixz="0.0" iyy="0.0017366" iyz="0.0" izz="0.441070275"/>
+    <inertia ixx="0.001155" ixy="0.0" ixz="0.0" iyy="0.001155" iyz="0.0" izz="0.001155"/>
   </inertial>
 </link>
 <joint name = "body_to_front" type = "fixed">
@@ -132,7 +132,7 @@
   </collision>
   <inertial>
     <mass value="0.01"/>
-    <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01"/>
+    <inertia ixx="0.000001" ixy="0.0" ixz="0.0" iyy="0.000001" iyz="0.0" izz="0.000000005"/>
   </inertial>
 </link>
 <joint name = "body_to_front_holder" type = "fixed">

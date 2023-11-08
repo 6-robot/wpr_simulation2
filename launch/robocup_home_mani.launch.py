@@ -68,6 +68,12 @@ def generate_launch_description():
         )
     )
 
+    spawn_persons = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(launch_file_dir, 'spawn_persons.launch.py')
+        )
+    )
+
     ld = LaunchDescription()
 
     # Add the commands to the launch description
@@ -75,5 +81,6 @@ def generate_launch_description():
     ld.add_action(gzclient_cmd)
     ld.add_action(spawn_robot_cmd)
     ld.add_action(spawn_objects)
+    ld.add_action(spawn_persons)
     
     return ld

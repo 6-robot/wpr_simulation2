@@ -32,14 +32,14 @@
     </geometry>
   </collision>
   <collision>
-    <origin xyz="0 0 0.12" rpy="0 0 0" />
+    <origin xyz="0 0 0.15" rpy="0 0 0" />
     <geometry>
       <cylinder length="0.02" radius="0.04"/>
     </geometry>
   </collision>
   <inertial>
-    <mass value="0.1"/>
-    <inertia ixx="0.538" ixy="0.0" ixz="0.0" iyy="0.538" iyz="0.0" izz="0.076"/>
+    <mass value="0.01"/>
+    <inertia ixx="0.000014" ixy="0.0" ixz="0.0" iyy="0.000014" iyz="0.0" izz="0.000008"/>
   </inertial>
 </link>
 <joint name = "base_to_body" type = "fixed">

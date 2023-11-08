@@ -1,6 +1,5 @@
 #include <rclcpp/rclcpp.hpp>
 #include <std_msgs/msg/string.hpp>
-#include <sensor_msgs/msg/joint_state.hpp>
 
 #define STEP_WAIT           0
 #define STEP_GOTO_KITCHEN   1
@@ -12,7 +11,6 @@ static int fetch_step = STEP_WAIT;
 std::shared_ptr<rclcpp::Node> node;
 rclcpp::Publisher<std_msgs::msg::String>::SharedPtr navi_pub;
 rclcpp::Publisher<std_msgs::msg::String>::SharedPtr behavior_pub;
-rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr mani_pub;
 
 void NaviResultCallback(const std_msgs::msg::String::SharedPtr msg)
 {
@@ -52,11 +50,24 @@ int main(int argc, char** argv)
 
     node = std::make_shared<rclcpp::Node>("fetch_node");
 
-    navi_pub = node->create_publisher<std_msgs::msg::String>("/waterplus/navi_waypoint", 10);
-    behavior_pub = node->create_publisher<std_msgs::msg::String>("/wpb_home/behavior", 10);
-    mani_pub = node->create_publisher<sensor_msgs::msg::JointState>("/wpb_home/mani_ctrl", 10);
-    auto navi_result_sub = node->create_subscription<std_msgs::msg::String>("waterplus/navi_result", 10, NaviResultCallback);
-    auto grab_result_sub = node->create_subscription<std_msgs::msg::String>("/wpb_home/grab_result", 10, GrabResultCallback);
+    navi_pub = node->create_publisher<std_msgs::msg::String>(
+        "/waterplus/navi_waypoint", 
+        10
+    );
+    behavior_pub = node->create_publisher<std_msgs::msg::String>(
+        "/wpb_home/behavior", 
+        10
+    );
+    auto navi_result_sub = node->create_subscription<std_msgs::msg::String>(
+        "waterplus/navi_result", 
+        10, 
+        NaviResultCallback
+    );
+    auto grab_result_sub = node->create_subscription<std_msgs::msg::String>(
+        "/wpb_home/grab_result", 
+        10, 
+        GrabResultCallback
+    );
     
     rclcpp::sleep_for(std::chrono::milliseconds(1000));
 
