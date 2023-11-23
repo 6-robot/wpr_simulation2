@@ -21,3 +21,4 @@ sudo apt install -y ros-dev-tools
 sudo apt install -y python3-pip
 sudo apt install -y python3-colcon-common-extensions
 sudo apt install -y python3-argcomplete
+sudo apt install -y pcl-tools

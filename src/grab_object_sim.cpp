@@ -75,6 +75,8 @@ int main(int argc, char** argv)
 
     while(rclcpp::ok())
     {
+        rclcpp::spin_some(node);
+        loop_rate.sleep();
         if(grab_step == STEP_ALIGN_OBJ)
         {
             float diff_x = object_x - align_x;
@@ -97,6 +99,7 @@ int main(int argc, char** argv)
             RCLCPP_INFO(node->get_logger(), "[STEP_ALIGN_OBJ] vel = ( %.2f , %.2f )",
                 vel_msg.linear.x,vel_msg.linear.y);
             vel_pub->publish(vel_msg);
+            continue;
         }
         if(grab_step == STEP_HAND_UP)
         {
@@ -111,6 +114,7 @@ int main(int argc, char** argv)
             mani_pub->publish(mani_msg);
             rclcpp::sleep_for(std::chrono::milliseconds(8000));
             grab_step = STEP_FORWARD;
+            continue;
         }
         if(grab_step == STEP_FORWARD)
         {
@@ -122,6 +126,7 @@ int main(int argc, char** argv)
             int forward_duration = (object_x - 0.65) * 20000;
             rclcpp::sleep_for(std::chrono::milliseconds(forward_duration));
             grab_step = STEP_GRAB;
+            continue;
         }
         if(grab_step == STEP_GRAB)
         {
@@ -140,6 +145,7 @@ int main(int argc, char** argv)
             vel_pub->publish(vel_msg);
             rclcpp::sleep_for(std::chrono::milliseconds(5000));
             grab_step = STEP_OBJ_UP;
+            continue;
         }
         if(grab_step == STEP_OBJ_UP)
         {
@@ -154,6 +160,7 @@ int main(int argc, char** argv)
             mani_pub->publish(mani_msg);
             rclcpp::sleep_for(std::chrono::milliseconds(5000));
             grab_step = STEP_BACKWARD;
+            continue;
         }
         if(grab_step == STEP_BACKWARD)
         {
@@ -165,6 +172,7 @@ int main(int argc, char** argv)
             rclcpp::sleep_for(std::chrono::milliseconds(10000));
             grab_step = STEP_DONE;
             RCLCPP_INFO(node->get_logger(), "[STEP_DONE]");
+            continue;
         }
         if(grab_step == STEP_DONE)
         {
@@ -180,8 +188,6 @@ int main(int argc, char** argv)
                 result_pub->publish(res_msg);
             }
         }
-        rclcpp::spin_some(node);
-        loop_rate.sleep();
     }
 
     rclcpp::shutdown();
