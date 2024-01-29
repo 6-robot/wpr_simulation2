@@ -10,7 +10,7 @@
 1. 获取源码:
 ```
 cd ~/ros2_ws/src/
-git clone https://gitee.com/zhangwanjie/wpr_simulation2.git
+git clone https://github.com/6-robot/wpr_simulation2.git
 ```
 2. 安装依赖项:  
 ROS2 Humble (Ubuntu 22.04)

@@ -108,7 +108,7 @@ void Cam_RGB_Callback(const sensor_msgs::msg::Image::SharedPtr msg)
 
     // Show the image
     imshow("Result", imgThresholded);
-    imshow("Original", imgOriginal);
+    imshow("RGB", imgOriginal);
     cv::waitKey(5);
 }
 
@@ -123,6 +123,9 @@ int main(int argc, char** argv)
         10, 
         Cam_RGB_Callback);
 
+    namedWindow("RGB");
+    namedWindow("Result");
+    
     rclcpp::spin(node);
 
     cv::destroyAllWindows();
