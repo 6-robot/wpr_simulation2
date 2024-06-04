@@ -29,7 +29,7 @@ int main(int argc, char** argv)
 
     node = std::make_shared<rclcpp::Node>("imu_data_node");
 
-    auto sub = node->create_subscription<sensor_msgs::msg::Imu>("/imu", 100, IMUCallback);
+    auto sub = node->create_subscription<sensor_msgs::msg::Imu>("/imu/data", 100, IMUCallback);
 
     rclcpp::spin(node);
 
