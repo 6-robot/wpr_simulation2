@@ -1,5 +1,14 @@
 # WPR系列机器人ROS2仿真工具
 
+## 介绍课程
+Bilibili: [机器人操作系统 ROS2 入门教材](https://www.bilibili.com/video/BV1oz421v7tB)  
+Youtube: [机器人操作系统 ROS2 入门教材](https://www.youtube.com/watch?v=j0foOvBqQTc)
+
+## 配套教材书籍
+《机器人操作系统（ROS2）入门与实践》  
+![视频课程](./media/book_1.jpg)
+淘宝链接：[《机器人操作系统（ROS2）入门与实践》](https://world.taobao.com/item/820988259242.htm)
+
 ## 系统版本
 
 - ROS2 Humble (Ubuntu 22.04)
