@@ -39,7 +39,7 @@ int main(int argc, char** argv)
 
     node = rclcpp::Node::make_shared("imu_behavior_node");
 
-    auto sub = node->create_subscription<sensor_msgs::msg::Imu>("imu/data", 100, IMUCallback);
+    auto sub = node->create_subscription<sensor_msgs::msg::Imu>("/imu/data", 10, IMUCallback);
 
     vel_pub = node->create_publisher<geometry_msgs::msg::Twist>("/cmd_vel", 10);
 

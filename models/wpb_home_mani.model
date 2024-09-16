@@ -643,7 +643,7 @@
 </gazebo> 
 
 <!-- Gazebo plugin for IMU -->
-<!-- <gazebo reference="body_link">
+<gazebo reference="body_link">
   <gravity>true</gravity>
   <sensor name="imu_sensor" type="imu">
     <always_on>true</always_on>
@@ -693,12 +693,12 @@
     <plugin name="wpb_imu" filename="libgazebo_ros_imu_sensor.so">
       <ros>
         <namespace>/</namespace>
-        <remapping>~/out:=imu</remapping>
+        <remapping>~/out:=imu/data</remapping>
       </ros>
       <frame_name>body_link</frame_name>
     </plugin>
   </sensor>
-</gazebo> -->
+</gazebo>
 
   <!-- ros2_control plugin -->
   <ros2_control name="GazeboSimSystem" type="system">
