@@ -151,7 +151,7 @@ private:
     ec.extract(cluster_indices);
 
     // 输出聚类的数量
-    RCLCPP_INFO(this->get_logger(), "Number of clusters: %d", cluster_indices.size());
+    RCLCPP_INFO(this->get_logger(), "Number of clusters: %ld", cluster_indices.size());
 
     // 清除上一次的方框显示
     RemoveBoxes();
