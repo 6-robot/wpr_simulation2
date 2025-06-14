@@ -31,6 +31,7 @@ cd ~/ros2_ws/src/wpr_simulation2/scripts
 ```
 cd ~/ros2_ws
 colcon build --symlink-install
+source install/setup.bash
 ```
 
 简单场景:
