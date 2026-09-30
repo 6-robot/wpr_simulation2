@@ -45,6 +45,12 @@
     <inertia ixx="2.800955" ixy="0.0" ixz="0.0" iyy="2.800955" iyz="0.0" izz="0.76645"/>
   </inertial>
 </link>
+<!-- Planar motion sets body velocity directly; ground friction otherwise
+     suppresses small translation and rotation commands. -->
+<gazebo reference="body_link">
+  <mu1>0.0</mu1>
+  <mu2>0.0</mu2>
+</gazebo>
 <joint name = "base_to_body" type = "fixed">
   <parent link = "base_link"/>
   <child link = "body_link"/>

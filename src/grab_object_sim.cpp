@@ -3,6 +3,7 @@
 #include <geometry_msgs/msg/twist.hpp>
 #include <sensor_msgs/msg/joint_state.hpp>
 #include <wpr_simulation2/msg/object.hpp>
+#include <chrono>
 
 #define STEP_WAIT           0
 #define STEP_FIND_OBJ       1
@@ -28,6 +29,26 @@ int count = 0;
 
 float align_x = 1.0;
 float align_y = 0.0;
+
+// Keep refreshing the command while waiting for an action to finish.
+// A single stop followed by a long sleep can leave the base using an old command.
+bool HoldVelocity(const geometry_msgs::msg::Twist & velocity,
+                  std::chrono::milliseconds duration)
+{
+    const auto deadline = std::chrono::steady_clock::now() + duration;
+    rclcpp::WallRate rate(30);
+    while(rclcpp::ok())
+    {
+        vel_pub->publish(velocity);
+        rclcpp::spin_some(node);
+        if(std::chrono::steady_clock::now() >= deadline)
+        {
+            return true;
+        }
+        rate.sleep();
+    }
+    return false;
+}
 
 void BehaviorCallback(const std_msgs::msg::String::SharedPtr msg)
 {
@@ -103,6 +124,9 @@ int main(int argc, char** argv)
         }
         if(grab_step == STEP_HAND_UP)
         {
+            // Send several stop commands before starting the lift.
+            if(!HoldVelocity(geometry_msgs::msg::Twist{}, std::chrono::milliseconds(200)))
+                break;
             RCLCPP_INFO(node->get_logger(), "[STEP_HAND_UP]");
             sensor_msgs::msg::JointState mani_msg;
             mani_msg.name.resize(2);
@@ -112,7 +136,8 @@ int main(int argc, char** argv)
             mani_msg.position[0] = object_z;
             mani_msg.position[1] = 0.15;
             mani_pub->publish(mani_msg);
-            rclcpp::sleep_for(std::chrono::milliseconds(8000));
+            if(!HoldVelocity(geometry_msgs::msg::Twist{}, std::chrono::milliseconds(8000)))
+                break;
             grab_step = STEP_FORWARD;
             continue;
         }
@@ -123,8 +148,9 @@ int main(int argc, char** argv)
             vel_msg.linear.x = 0.1;
             vel_msg.linear.y = 0;
             vel_pub->publish(vel_msg);
-            int forward_duration = (object_x - 0.65) * 20000;
-            rclcpp::sleep_for(std::chrono::milliseconds(forward_duration));
+            int forward_duration = (object_x - 0.65) * 9000;
+            if(!HoldVelocity(vel_msg, std::chrono::milliseconds(forward_duration)))
+                break;
             grab_step = STEP_GRAB;
             continue;
         }
@@ -143,7 +169,8 @@ int main(int argc, char** argv)
             vel_msg.linear.x = 0;
             vel_msg.linear.y = 0;
             vel_pub->publish(vel_msg);
-            rclcpp::sleep_for(std::chrono::milliseconds(5000));
+            if(!HoldVelocity(geometry_msgs::msg::Twist{}, std::chrono::milliseconds(5000)))
+                break;
             grab_step = STEP_OBJ_UP;
             continue;
         }
@@ -158,7 +185,8 @@ int main(int argc, char** argv)
             mani_msg.position[0] = object_z + 0.05;
             mani_msg.position[1] = 0.07;
             mani_pub->publish(mani_msg);
-            rclcpp::sleep_for(std::chrono::milliseconds(5000));
+            if(!HoldVelocity(geometry_msgs::msg::Twist{}, std::chrono::milliseconds(5000)))
+                break;
             grab_step = STEP_BACKWARD;
             continue;
         }
@@ -169,7 +197,11 @@ int main(int argc, char** argv)
             vel_msg.linear.x = -0.1;
             vel_msg.linear.y = 0;
             vel_pub->publish(vel_msg);
-            rclcpp::sleep_for(std::chrono::milliseconds(10000));
+            if(!HoldVelocity(vel_msg, std::chrono::milliseconds(5000)))
+                break;
+            // Refresh stop before reporting completion to the next behavior.
+            if(!HoldVelocity(geometry_msgs::msg::Twist{}, std::chrono::milliseconds(1000)))
+                break;
             grab_step = STEP_DONE;
             RCLCPP_INFO(node->get_logger(), "[STEP_DONE]");
             continue;
