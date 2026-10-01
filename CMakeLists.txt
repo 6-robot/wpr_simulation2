@@ -17,6 +17,7 @@ find_package(rclcpp_action REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 find_package(tf2 REQUIRED)
+find_package(tf2_ros REQUIRED)
 find_package(nav2_msgs REQUIRED)
 find_package(cv_bridge REQUIRED)
 find_package(image_transport REQUIRED)
@@ -65,7 +66,7 @@ target_link_libraries(objects_publisher "${cpp_typesupport_target}")
 
 add_executable(grab_object_sim src/grab_object_sim.cpp)
 ament_target_dependencies(grab_object_sim
-"rclcpp" "sensor_msgs" "pcl_conversions" "pcl_ros"
+"rclcpp" "sensor_msgs" "pcl_conversions" "pcl_ros" "nav_msgs" "tf2_ros" "tf2_geometry_msgs"
 )
 target_link_libraries(grab_object_sim "${cpp_typesupport_target}")
 

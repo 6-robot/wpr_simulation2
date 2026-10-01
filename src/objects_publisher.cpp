@@ -8,6 +8,7 @@
 #include <pcl_conversions/pcl_conversions.h>
 #include <pcl_ros/transforms.hpp>
 #include <pcl/filters/passthrough.h>
+#include <pcl/filters/voxel_grid.h>
 #include <pcl/filters/extract_indices.h>
 #include <pcl/segmentation/sac_segmentation.h>
 #include <pcl/segmentation/extract_clusters.h>
@@ -46,7 +47,7 @@ public:
 
     pc_sub_ = this->create_subscription<sensor_msgs::msg::PointCloud2>(
         "/kinect2/sd/points", 
-        rclcpp::QoS(rclcpp::QoSInitialization::from_rmw(rmw_qos_profile_default)).best_effort(),
+        rclcpp::SensorDataQoS().keep_last(1),
         std::bind(&ObjectsPublisher::pointcloudCallback, this, std::placeholders::_1));
     objects_pub_ = this->create_publisher<wpr_simulation2::msg::Object>("/wpb_home/objects_3d", 10);
     marker_pub_ = this->create_publisher<visualization_msgs::msg::MarkerArray>("/objects_marker", 10);
@@ -107,11 +108,23 @@ private:
     pass.setFilterLimits(0.5, 1.5);
     pass.filter(cloud_src);
 
+    // Bound clustering cost in furnished rooms and avoid processing queued frames.
+    pcl::VoxelGrid<pcl::PointXYZRGB> voxel;
+    voxel.setInputCloud(cloud_src.makeShared());
+    voxel.setLeafSize(0.005f, 0.005f, 0.005f);
+    voxel.filter(cloud_src);
+    if(cloud_src.empty())
+    {
+        return;
+    }
+
     // 定义模型分类器
     pcl::ModelCoefficients::Ptr coefficients(new pcl::ModelCoefficients);
     pcl::SACSegmentation<pcl::PointXYZRGB> segmentation;
     segmentation.setInputCloud(cloud_src.makeShared());
-    segmentation.setModelType(pcl::SACMODEL_PLANE);
+    segmentation.setModelType(pcl::SACMODEL_PERPENDICULAR_PLANE);
+    segmentation.setAxis(Eigen::Vector3f::UnitZ());
+    segmentation.setEpsAngle(0.15);
     segmentation.setMethodType(pcl::SAC_RANSAC);
     segmentation.setDistanceThreshold(0.05);
     segmentation.setOptimizeCoefficients(true);
@@ -122,6 +135,10 @@ private:
 
     // 统计平面点集的平均高度
     int point_num = planeIndices->indices.size();
+    if(point_num == 0)
+    {
+        return;
+    }
     float points_z_sum = 0;
     for (int i = 0; i < point_num; i++)
     {
@@ -143,8 +160,8 @@ private:
 
     std::vector<pcl::PointIndices> cluster_indices;
     pcl::EuclideanClusterExtraction<pcl::PointXYZRGB> ec;
-    ec.setClusterTolerance(0.1); // 设置聚类的容差
-    ec.setMinClusterSize(100); // 设置每个聚类的最小点数
+    ec.setClusterTolerance(0.03); // 设置聚类的容差
+    ec.setMinClusterSize(30); // 设置每个聚类的最小点数
     ec.setMaxClusterSize(25000); // 设置每个聚类的最大点数
     ec.setSearchMethod(tree);
     ec.setInputCloud(cloud_src.makeShared());
@@ -218,7 +235,7 @@ private:
             RCLCPP_INFO(this->get_logger(),"[obj_%d] xMin= %.2f yMin = %.2f yMax = %.2f",i,boxMarker.xMin, boxMarker.yMin, boxMarker.yMax);
         } 
     }
-    SortObjects();
+    SortObjects(input->header);
     marker_pub_->publish(marker_array);
     RCLCPP_INFO(this->get_logger(), "---------------------" );
   }
@@ -317,11 +334,13 @@ private:
       return dist;
   }
 
-  void SortObjects()
+  void SortObjects(const std_msgs::msg::Header & header)
   {
       int nNum = arObj.size();
       if (nNum == 0)
+      {
           return;
+      }
       // 冒泡排序
       stObjectDetected tObj;
       for(int n = 0; n<nNum; n++)
@@ -342,6 +361,8 @@ private:
       }
       // 排序完毕，发送消息
       wpr_simulation2::msg::Object object_msg;
+      object_msg.header = header;
+      object_msg.header.frame_id = "base_footprint";
       for(int i=0;i<nNum; i++)
       {
           object_msg.name.push_back(arObj[i].name);
