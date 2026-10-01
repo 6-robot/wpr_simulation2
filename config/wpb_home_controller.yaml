@@ -1,6 +1,6 @@
 controller_manager:
   ros__parameters:
-    update_rate: 100  # Hz
+    update_rate: 1000  # Match the 1 ms physics step for contact force control.
     use_sim_time: true
 
     manipulator_controller:
@@ -24,4 +24,3 @@ manipulator_controller:
       - palm_right_finger
       - right_finger_tip
     interface_name: position
-

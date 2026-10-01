@@ -194,8 +194,10 @@
     </geometry>
   </collision>
    <inertial>
+      <!-- Box approximation of the forearm, about its centre of mass. -->
+      <origin xyz="0.19 0 -0.01" rpy="0 0 0"/>
       <mass value="0.95"/>
-      <inertia ixx="0.121862813" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.121862813"/> 
+      <inertia ixx="0.000269166667" ixy="0" ixz="0" iyy="0.009769166667" iyz="0" izz="0.009895833333"/>
   </inertial>
 </link>
 <joint name="elbow_forearm" type="revolute">
@@ -223,17 +225,18 @@
     </collision>
     <inertial>
       <mass value="0.1"/>
-      <inertia ixx="0.001" ixy="0.0" ixz="0.001" iyy="0.0" iyz="0.0" izz="0.001"/>
+      <origin xyz="0.05 0 0" rpy="0 0 0"/>
+      <inertia ixx="0.0000122416667" ixy="0" ixz="0" iyy="0.0000947416667" iyz="0" izz="0.0000841666667"/>
     </inertial>
   </link>
   <gazebo reference="mani_left_finger">
     <material>Gazebo/Grey</material>
-    <kp>1000000.0</kp>
-    <kd>100.0</kd>
-    <mu1>30.0</mu1>
-    <mu2>30.0</mu2>
-    <maxVel>1.0</maxVel>
-    <minDepth>0.001</minDepth>
+    <kp>100000.0</kp>
+    <kd>10.0</kd>
+    <mu1>1.0</mu1>
+    <mu2>1.0</mu2>
+    <maxVel>0.01</maxVel>
+    <minDepth>0.0001</minDepth>
   </gazebo>
   <joint name = "palm_left_finger" type = "revolute">
     <parent link = "mani_forearm"/>
@@ -241,7 +244,7 @@
     <origin xyz = "0.33 0.0125 -0.006"/>
     <axis xyz = "0 0 1"/>
     <limit effort = "1000.0" lower="-0.07" upper="1.57" velocity="0.5"/>
-    <dynamics damping="0.1" friction="0.0"/>
+    <dynamics damping="0.001" friction="0.0"/>
   </joint>
 
   <!-- left fingertip -->
@@ -258,25 +261,20 @@
         <box size="0.07 0.006  0.025"/>
       </geometry>
     </collision>
-    <collision>
-    <origin xyz="0.071 -0.005 0" rpy="0 0 0" />
-    <geometry>
-      <box size="0.001 0.008  0.025"/>
-    </geometry>
-  </collision>
     <inertial>
       <mass value="0.1"/>
-      <inertia ixx="0.001" ixy="0.0" ixz="0.001" iyy="0.0" iyz="0.0" izz="0.001"/>
+      <origin xyz="0.035 0 0" rpy="0 0 0"/>
+      <inertia ixx="0.00000550833333" ixy="0" ixz="0" iyy="0.0000460416667" iyz="0" izz="0.0000411333333"/>
     </inertial>
   </link>
   <gazebo reference="mani_left_finger_tip">
     <material>Gazebo/Grey</material>
-    <kp>1000000.0</kp>
-    <kd>100.0</kd>
-    <mu1>30.0</mu1>
-    <mu2>30.0</mu2>
-    <maxVel>1.0</maxVel>
-    <minDepth>0.001</minDepth>
+    <kp>100000.0</kp>
+    <kd>10.0</kd>
+    <mu1>1.0</mu1>
+    <mu2>1.0</mu2>
+    <maxVel>0.01</maxVel>
+    <minDepth>0.0001</minDepth>
   </gazebo>
   <joint name = "left_finger_tip" type = "revolute">
     <parent link = "mani_left_finger"/>
@@ -285,7 +283,7 @@
     <axis xyz = "0 0 1"/>
     <limit effort = "1000.0" lower="-1.57" upper="1.57"  velocity="0.5"/>
     <mimic joint = "palm_left_finger" multiplier = "-1" offset = "0"/>
-    <dynamics damping="0.1" friction="0.0"/>
+    <dynamics damping="0.001" friction="0.0"/>
   </joint>
 
   <!-- right finger -->
@@ -304,17 +302,18 @@
     </collision>
     <inertial>
       <mass value="0.1"/>
-      <inertia ixx="0.001" ixy="0.0" ixz="0.001" iyy="0.0" iyz="0.0" izz="0.001"/>
+      <origin xyz="0.05 0 0" rpy="0 0 0"/>
+      <inertia ixx="0.0000122416667" ixy="0" ixz="0" iyy="0.0000947416667" iyz="0" izz="0.0000841666667"/>
     </inertial>
   </link>
   <gazebo reference="mani_right_finger">
     <material>Gazebo/Grey</material>
-    <kp>1000000.0</kp>
-    <kd>100.0</kd>
-    <mu1>30.0</mu1>
-    <mu2>30.0</mu2>
-    <maxVel>1.0</maxVel>
-    <minDepth>0.001</minDepth>
+    <kp>100000.0</kp>
+    <kd>10.0</kd>
+    <mu1>1.0</mu1>
+    <mu2>1.0</mu2>
+    <maxVel>0.01</maxVel>
+    <minDepth>0.0001</minDepth>
   </gazebo>
   <joint name = "palm_right_finger" type = "revolute">
     <parent link = "mani_forearm"/>
@@ -323,7 +322,7 @@
     <axis xyz = "0 0 1"/>
     <limit effort = "1000.0" lower="-1.57" upper="1.57" velocity="0.5"/>
     <mimic joint = "palm_left_finger" multiplier = "-1" offset = "0"/>
-    <dynamics damping="0.1" friction="0.0"/>
+    <dynamics damping="0.001" friction="0.0"/>
   </joint>
 
   <!-- right fingertip -->
@@ -340,25 +339,20 @@
         <box size="0.07 0.006  0.025"/>
       </geometry>
     </collision>
-    <collision>
-    <origin xyz="0.071 0.005 0" rpy="0 0 0" />
-    <geometry>
-      <box size="0.001 0.008  0.025"/>
-    </geometry>
-  </collision>
     <inertial>
       <mass value="0.1"/>
-      <inertia ixx="0.001" ixy="0.0" ixz="0.001" iyy="0.0" iyz="0.0" izz="0.001"/>
+      <origin xyz="0.035 0 0" rpy="0 0 0"/>
+      <inertia ixx="0.00000550833333" ixy="0" ixz="0" iyy="0.0000460416667" iyz="0" izz="0.0000411333333"/>
     </inertial>
   </link>
   <gazebo reference="mani_right_finger_tip">
     <material>Gazebo/Grey</material>
-    <kp>1000000.0</kp>
-    <kd>100.0</kd>
-    <mu1>30.0</mu1>
-    <mu2>30.0</mu2>
-    <maxVel>1.0</maxVel>
-    <minDepth>0.001</minDepth>
+    <kp>100000.0</kp>
+    <kd>10.0</kd>
+    <mu1>1.0</mu1>
+    <mu2>1.0</mu2>
+    <maxVel>0.01</maxVel>
+    <minDepth>0.0001</minDepth>
   </gazebo>
   <joint name = "right_finger_tip" type = "revolute">
     <parent link = "mani_right_finger"/>
@@ -367,7 +361,7 @@
     <axis xyz = "0 0 1"/>
     <limit effort = "1000.0" lower="-1.57" upper="1.57"  velocity="0.5"/>
     <mimic joint = "palm_left_finger" multiplier = "1" offset = "0"/>
-    <dynamics damping="0.1" friction="0.0"/>
+    <dynamics damping="0.001" friction="0.0"/>
   </joint>
   <transmission name="right_finger_tip_transmission">
     <type>transmission_interface/SimpleTransmission</type>
@@ -712,6 +706,10 @@
       <plugin>gazebo_ros2_control/GazeboSystem</plugin>
     </hardware>
     <joint name="mani_base">
+        <!-- GazeboSystem uses one position mode for all controlled joints. -->
+        <param name="pos_kp">5000.0</param>
+        <param name="pos_ki">0.0</param>
+        <param name="pos_kd">150.0</param>
         <command_interface name="position">
             <param name="min">0</param>
             <param name="max">0.7</param>
@@ -721,6 +719,9 @@
         </state_interface>
     </joint>
     <joint name="elbow_forearm">
+        <param name="pos_kp">300.0</param>
+        <param name="pos_ki">0.0</param>
+        <param name="pos_kd">8.0</param>
         <command_interface name="position">
             <param name="min">-3.1416</param>
             <param name="max">3.1416</param>
@@ -730,6 +731,10 @@
         </state_interface>
     </joint>
     <joint name="palm_left_finger">
+        <!-- Track finger position with torque and damping. -->
+        <param name="pos_kp">5.0</param>
+        <param name="pos_ki">0.0</param>
+        <param name="pos_kd">0.01</param>
         <command_interface name="position">
             <param name="min">-3.1416</param>
             <param name="max">3.1416</param>
@@ -739,6 +744,10 @@
         </state_interface>
     </joint>
     <joint name="left_finger_tip">
+        <!-- Track finger position with torque and damping. -->
+        <param name="pos_kp">5.0</param>
+        <param name="pos_ki">0.0</param>
+        <param name="pos_kd">0.01</param>
         <command_interface name="position">
             <param name="min">-3.1416</param>
             <param name="max">3.1416</param>
@@ -748,6 +757,10 @@
         </state_interface>
     </joint>
     <joint name="palm_right_finger">
+        <!-- Track finger position with torque and damping. -->
+        <param name="pos_kp">2.0</param>
+        <param name="pos_ki">0.0</param>
+        <param name="pos_kd">0.003</param>
         <command_interface name="position">
             <param name="min">-3.1416</param>
             <param name="max">3.1416</param>
@@ -757,6 +770,10 @@
         </state_interface>
     </joint>
     <joint name="right_finger_tip">
+        <!-- Track finger position with torque and damping. -->
+        <param name="pos_kp">2.0</param>
+        <param name="pos_ki">0.0</param>
+        <param name="pos_kd">0.003</param>
         <command_interface name="position">
             <param name="min">-3.1416</param>
             <param name="max">3.1416</param>
@@ -773,25 +790,5 @@
     </plugin>
   </gazebo>
 
-  <gazebo>
-   <plugin name="gazebo_grasp_fix" filename="libgazebo_grasp_fix.so">
-        <arm>
-           <arm_name>wpb_home_arm</arm_name>
-           <palm_link> elbow_forearm  </palm_link>
-           <gripper_link> elbow_forearm </gripper_link>
-           <gripper_link> palm_left_finger </gripper_link>
-           <gripper_link> left_finger_tip </gripper_link>
-           <gripper_link> palm_right_finger </gripper_link>
-           <gripper_link> right_finger_tip </gripper_link>
-        </arm>
-       <forces_angle_tolerance>150</forces_angle_tolerance>
-       <update_rate>4</update_rate>
-       <grip_count_threshold>4</grip_count_threshold>
-       <max_grip_count>8</max_grip_count>
-       <release_tolerance>0.005</release_tolerance>
-       <disable_collisions_on_attach>true</disable_collisions_on_attach>
-       <contact_topic>__default_topic__</contact_topic>
-    </plugin>
-</gazebo>
   
 </robot>

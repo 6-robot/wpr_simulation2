@@ -268,7 +268,7 @@ int main(int argc, char** argv)
             mani_msg.name[0] = "lift";
             mani_msg.name[1] = "gripper";
             mani_msg.position.resize(2);
-            mani_msg.position[0] = object_z;
+            mani_msg.position[0] = object_z + 0.04;
             mani_msg.position[1] = 0.15;
             mani_pub->publish(mani_msg);
             if(!HoldVelocity(geometry_msgs::msg::Twist{}, std::chrono::milliseconds(8000)))
@@ -294,8 +294,8 @@ int main(int argc, char** argv)
             mani_msg.name[0] = "lift";
             mani_msg.name[1] = "gripper";
             mani_msg.position.resize(2);
-            mani_msg.position[0] = object_z;
-            mani_msg.position[1] = 0.07;
+            mani_msg.position[0] = object_z + 0.04;
+            mani_msg.position[1] = 0.058;
             mani_pub->publish(mani_msg);
             geometry_msgs::msg::Twist vel_msg;
             vel_msg.linear.x = 0;
@@ -314,8 +314,8 @@ int main(int argc, char** argv)
             mani_msg.name[0] = "lift";
             mani_msg.name[1] = "gripper";
             mani_msg.position.resize(2);
-            mani_msg.position[0] = object_z + 0.05;
-            mani_msg.position[1] = 0.07;
+            mani_msg.position[0] = object_z + 0.09;
+            mani_msg.position[1] = 0.058;
             mani_pub->publish(mani_msg);
             if(!HoldVelocity(geometry_msgs::msg::Twist{}, std::chrono::milliseconds(5000)))
                 break;

@@ -19,7 +19,8 @@
 import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription
+from launch.actions import IncludeLaunchDescription, RegisterEventHandler
+from launch.event_handlers import OnProcessExit
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
@@ -84,7 +85,7 @@ def generate_launch_description():
             '-entity', 'red_bottle',
             '-x', '1.1',
             '-y', '0.3',
-            '-z', '2.0',
+            '-z', '0.80',
             '-Y', '0.0']
         )
 
@@ -97,7 +98,7 @@ def generate_launch_description():
             '-entity', 'green_bottle',
             '-x', '1.1',
             '-y', '-0.2',
-            '-z', '2.0',
+            '-z', '0.80',
             '-Y', '0.0']
         )
 
@@ -114,9 +115,11 @@ def generate_launch_description():
     ld.add_action(gzserver_cmd)
     ld.add_action(gzclient_cmd)
     ld.add_action(spawn_robot_cmd)
+    # Spawn bottles just above the tabletop, after the table is present.
+    ld.add_action(RegisterEventHandler(OnProcessExit(
+        target_action=spawn_table,
+        on_exit=[spawn_red_bottle, spawn_green_bottle])))
     ld.add_action(spawn_table)
-    ld.add_action(spawn_red_bottle)
-    ld.add_action(spawn_green_bottle)
     # ld.add_action(rviz_cmd)
 
     return ld

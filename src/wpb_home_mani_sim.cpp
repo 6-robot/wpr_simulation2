@@ -38,6 +38,7 @@
 #include "rclcpp/rclcpp.hpp"
 #include "sensor_msgs/msg/joint_state.hpp"
 #include "std_msgs/msg/float64_multi_array.hpp"
+#include <algorithm>
 
 static float nMinHeight = 0.493;
 static float nMaxHeight = 1.036;
@@ -61,6 +62,25 @@ public:
             "/wpb_home/mani_ctrl", 10,
             [this](const sensor_msgs::msg::JointState::SharedPtr msg) {
             processJointState(msg);
+            });
+
+        // Keep the pads parallel even when contact deflects the driven fingers.
+        joint_subscription_ = this->create_subscription<sensor_msgs::msg::JointState>(
+            "/joint_states", rclcpp::SensorDataQoS(),
+            [this](const sensor_msgs::msg::JointState::SharedPtr msg) {
+                for(size_t i=0; i<msg->name.size() && i<msg->position.size(); ++i)
+                {
+                    if(msg->name[i] == "palm_left_finger")
+                    {
+                        finger_position_[0] = msg->position[i];
+                        finger_received_[0] = true;
+                    }
+                    if(msg->name[i] == "palm_right_finger")
+                    {
+                        finger_position_[1] = msg->position[i];
+                        finger_received_[1] = true;
+                    }
+                }
             });
 
         // 创建发布器，发布/manipulator_controller/commands话题
@@ -107,22 +127,18 @@ public:
 
     void publishMessage()
     {
-        if(target_position_[0] > pub_msg_.data[0])
-            pub_msg_.data[0] += 0.003;
-        if(target_position_[0] < pub_msg_.data[0])
-            pub_msg_.data[0] -= 0.003;
-        if(target_position_[1] > pub_msg_.data[1])
-            pub_msg_.data[1] += 0.012;
-        if(target_position_[1] < pub_msg_.data[1])
-            pub_msg_.data[1] -= 0.012;
-        for(int i=2;i<6;i++)
+        // Clamp the final step so mirrored fingers reach symmetric targets.
+        // Smaller finger steps reduce contact impulses when closing on an object.
+        const double steps[6] = {0.003, 0.012, 0.005, 0.005, 0.005, 0.005};
+        for(int i=0;i<6;i++)
         {
-            if(target_position_[i] > pub_msg_.data[i])
-                pub_msg_.data[i] += 0.02;
-            if(target_position_[i] < pub_msg_.data[i])
-                pub_msg_.data[i] -= 0.02;
+            const double error = target_position_[i] - pub_msg_.data[i];
+            pub_msg_.data[i] += std::max(-steps[i], std::min(steps[i], error));
         }
         
+        if(finger_received_[0]) pub_msg_.data[3] = -finger_position_[0];
+        if(finger_received_[1]) pub_msg_.data[5] = -finger_position_[1];
+
         // 发布Float64MultiArray消息到/manipulator_controller/commands话题
         publisher_->publish(pub_msg_);
     }
@@ -149,6 +165,9 @@ private:
     }
 
     rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr subscription_;
+    rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr joint_subscription_;
+    double finger_position_[2] = {0.0, 0.0};
+    bool finger_received_[2] = {false, false};
     rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr publisher_;
     std_msgs::msg::Float64MultiArray pub_msg_;
     rclcpp::TimerBase::SharedPtr timer_;
