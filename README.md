@@ -29,6 +29,8 @@ cd ~/ros2_ws/src/wpr_simulation2/scripts
 ```
 3. 编译
 ```
+加载 ROS Humble 
+source /opt/ros/humble/setup.bash
 cd ~/ros2_ws
 colcon build --symlink-install
 ```
