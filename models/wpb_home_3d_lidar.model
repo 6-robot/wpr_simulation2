@@ -1,0 +1,331 @@
+<?xml version="1.0"?>
+<robot name="wpb_home_gazebo">
+
+<!-- 材质定义 -->
+<material name="lidar_window">
+  <color rgba="0.04 0.08 0.14 1.0"/>
+</material>
+
+<link name="base_footprint">
+  <visual>
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <geometry>
+      <box size="0.05 0.05 0.001" />
+    </geometry>
+  </visual>
+</link>
+
+<!-- base -->
+<link name="base_link">
+  <visual>
+   <geometry>
+    <box size="0.01 0.01 0.001" />
+   </geometry>
+   <origin rpy = "0 0 0" xyz = "0 0 0"/>
+  </visual>
+</link>
+
+<joint name="base_joint" type="fixed">
+  <origin xyz="0 0 0" rpy="0 0 0" />
+  <parent link="base_footprint"/>
+  <child link="base_link" />
+</joint>
+
+<!-- body -->
+<link name = "body_link">
+  <visual>
+    <geometry>
+      <mesh filename="package://wpr_simulation2/meshes/wpb_home/wpb_home_std.dae" scale="1 1 1"/>
+    </geometry>
+    <origin rpy = "1.57 0 1.57" xyz = "-.225 -0.225 0"/>
+  </visual>
+  <collision>
+    <origin xyz="0.001 0 .065" rpy="0 0 0" />
+    <geometry>
+      <cylinder length="0.13" radius="0.226"/>
+    </geometry>
+  </collision>
+  <inertial>
+    <mass value="20"/>
+    <inertia ixx="4.00538" ixy="0.0" ixz="0.0" iyy="4.00538" iyz="0.0" izz="0.51076"/>
+  </inertial>
+</link>
+
+<!-- 平面摩擦力配置 -->
+<gazebo reference="body_link">
+  <mu1>0.0</mu1>
+  <mu2>0.0</mu2>
+</gazebo>
+
+<joint name = "base_to_body" type = "fixed">
+  <parent link = "base_link"/>
+  <child link = "body_link"/>
+  <origin rpy="0 0 0" xyz="0 0 0"/>
+</joint>
+
+<!-- top of base -->
+<link name = "base_top_link">
+  <collision>
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <geometry>
+      <box size="0.33 0.31 0.01"/>
+    </geometry>
+  </collision>
+  <inertial>
+    <mass value="0.01"/>
+    <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01"/>
+  </inertial>
+</link>
+<joint name = "body_to_top" type = "fixed">
+  <parent link = "body_link"/>
+  <child link = "base_top_link"/>
+  <origin rpy="0 0 0" xyz="0.01 0 0.2"/>
+</joint>
+
+<!-- back -->
+<link name = "body_back_link">
+  <collision>
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <geometry>
+      <box size="0.03 0.23 1.05"/>
+    </geometry>
+  </collision>
+  <inertial>
+    <mass value="0.01"/>
+    <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01"/>
+  </inertial>
+</link>
+<joint name = "body_to_back" type = "fixed">
+  <parent link = "base_top_link"/>
+  <child link = "body_back_link"/>
+  <origin rpy="0 0.31 0" xyz="-0.038 0 0.5"/>
+</joint>
+
+<!-- head -->
+<link name = "head_link">
+  <collision>
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <geometry>
+      <box size="0.07 0.28  0.06"/>
+    </geometry>
+  </collision>
+  <inertial>
+    <mass value="0.01"/>
+    <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01"/>
+  </inertial>
+</link>
+<joint name = "body_to_head" type = "fixed">
+  <parent link = "base_top_link"/>
+  <child link = "head_link"/>
+  <origin rpy="0 0.27 0" xyz="0.155 0 1.17"/>
+</joint>
+
+<!-- front -->
+<link name = "front_link">
+  <collision>
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <geometry>
+     <cylinder length="1.1" radius="0.01"/>
+    </geometry>
+  </collision>
+  <inertial>
+    <mass value="0.01"/>
+    <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01"/>
+  </inertial>
+</link>
+<joint name = "body_to_front" type = "fixed">
+  <parent link = "base_top_link"/>
+  <child link = "front_link"/>
+  <origin rpy="0 0 0" xyz="0.15 0 0.55"/>
+</joint>
+
+<!-- 兼容保留激光雷达坐标系（无插件） -->
+<link name = "laser_link">
+  <visual>
+   <geometry>
+      <cylinder length="0.001" radius="0.001"/>
+   </geometry>
+   <origin rpy = "0 0 0" xyz = "0 0 0"/>
+  </visual>
+</link>
+<joint name="laser_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0 0.15"  />
+    <parent link="base_link" />
+    <child link="laser_link" />
+</joint>
+
+<!-- 3D 激光雷达部件 -->
+<link name="lidar_link">
+  <inertial>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <mass value="0.8"/>
+    <inertia ixx="0.0018" ixy="0.0" ixz="0.0" iyy="0.0018" iyz="0.0" izz="0.0024"/>
+  </inertial>
+  <visual>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <cylinder radius="0.01" length="0.01"/>
+    </geometry>
+    <material name="lidar_window"/>
+  </visual>
+  
+</link>
+
+<!-- 安装在机器人头部顶端，水平朝前 -->
+<joint name="lidar_joint" type="fixed">
+  <parent link="base_link"/>
+  <child link="lidar_link"/>
+  <origin xyz="0.165 0 1.44" rpy="0 0 0"/>
+</joint>
+
+
+
+<!-- 32 线 3D 激光雷达 Gazebo Classic 插件（发布到 /lidar/scan/points） -->
+<gazebo reference="lidar_link">
+  <material>Gazebo/SkyBlue</material>
+  <sensor name="multiline_3d_lidar" type="ray">
+    <pose>0 0 0 0 0 0</pose>
+    <always_on>true</always_on>
+    <visualize>false</visualize>
+    <update_rate>6</update_rate>
+    <ray>
+      <scan>
+        <horizontal>
+          <samples>360</samples>
+          <resolution>1</resolution>
+          <min_angle>-3.14159265</min_angle>
+          <max_angle>3.14159265</max_angle>
+        </horizontal>
+        <vertical>
+          <samples>32</samples>
+          <resolution>1</resolution>
+          <min_angle>-0.4363323</min_angle>
+          <max_angle>0.3490659</max_angle>
+        </vertical>
+      </scan>
+      <range>
+        <min>0.25</min>
+        <max>20.0</max>
+        <resolution>0.01</resolution>
+      </range>
+      <noise>
+        <type>gaussian</type>
+        <mean>0.0</mean>
+        <stddev>0.008</stddev>
+      </noise>
+    </ray>
+    <plugin name="multiline_lidar_plugin" filename="libgazebo_ros_ray_sensor.so">
+      <ros>
+        <remapping>~/out:=/lidar/scan/points</remapping>
+      </ros>
+      <output_type>sensor_msgs/PointCloud2</output_type>
+      <frame_name>lidar_link</frame_name>
+    </plugin>
+  </sensor>
+</gazebo>
+
+<!-- 兼容保留 Kinect 坐标系（无插件） -->
+<link name = "kinect2_dock">
+  <visual>
+   <geometry>
+    <box size="0.001 0.001 0.001"/>
+   </geometry>
+   <origin rpy = "0 0 0" xyz = "0 0 0"/>
+  </visual>
+</link>
+<joint name="kinect_height" type="fixed">
+  <parent link="base_link"/>
+  <child link="kinect2_dock"/>
+  <origin xyz="0.145 -0.013 1.37" rpy="0 0 0"/> 
+</joint>
+
+<link name = "kinect2_head_frame">
+  <visual>
+   <geometry>
+    <box size="0.001 0.001 0.001"/>
+   </geometry>
+   <origin xyz = "0 0 0" rpy = "0 0 0"/>
+  </visual>
+</link>
+<joint name="kinect_pitch" type="fixed">
+  <origin xyz="0 0 0" rpy="0 0.5 0" /> 
+  <parent link="kinect2_dock" />
+  <child link="kinect2_head_frame" />
+</joint>
+
+<link name = "kinect2_front_frame">
+  <visual>
+   <geometry>
+    <box size="0.001 0.001 0.001"/>
+   </geometry>
+   <origin xyz = "0 0 0" rpy = "0 0 0"/>
+  </visual>
+</link>
+<joint name="kinect_head" type="fixed">
+  <origin xyz="0 0 0" rpy=" 0 1.57 0" /> 
+  <parent link="kinect2_head_frame" />
+  <child link="kinect2_front_frame" />
+</joint>
+
+<link name = "kinect2_ir_optical_frame">
+  <visual>
+   <geometry>
+    <box size="0.001 0.001 0.001"/>
+   </geometry>
+   <origin xyz = "0 0 0" rpy = "0 0 0"/>
+  </visual>
+</link>
+<joint name="kinect_ir_trans" type="fixed">
+  <origin xyz="0 0 0" rpy="0 0 -1.57" /> 
+  <parent link="kinect2_front_frame" />
+  <child link="kinect2_ir_optical_frame" />
+</joint>
+
+<link name = "kinect2_camera_frame">
+  <visual>
+   <geometry>
+    <box size="0.001 0.001 0.001"/>
+   </geometry>
+   <origin rpy = "0 0 0" xyz = "0 0 0" />
+  </visual>
+</link>
+<joint name="kinect_camra_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="3.1415926 0 -1.5707963" />
+    <parent link="kinect2_ir_optical_frame" />
+    <child link="kinect2_camera_frame" />
+</joint>
+
+<link name = "kinect2_rgb_optical_frame">
+  <visual>
+   <geometry>
+    <box size="0.001 0.001 0.001"/>
+   </geometry>
+   <origin rpy = "0 0 0" xyz = "0 0 0" />
+  </visual>
+</link>
+<joint name="kinect_hd_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="0 1.5707963 0" />
+    <parent link="kinect2_camera_frame" />
+    <child link="kinect2_rgb_optical_frame" />
+</joint>
+
+<!-- 底盘移动驱动插件 -->
+<gazebo>
+  <plugin name="base_controller" filename="libgazebo_ros_planar_move.so">
+    <ros>
+      <remapping>cmd_vel:=cmd_vel</remapping>
+      <remapping>odom:=odom</remapping>
+    </ros>
+    <update_rate>100</update_rate>
+    <publish_rate>20</publish_rate>
+    <publish_odom>true</publish_odom>
+    <publish_odom_tf>true</publish_odom_tf>
+    <odometry_frame>odom</odometry_frame>
+    <robot_base_frame>base_footprint</robot_base_frame>
+    <covariance_x>0.0001</covariance_x>
+    <covariance_y>0.0001</covariance_y>
+    <covariance_yaw>0.01</covariance_yaw>
+  </plugin>
+</gazebo> 
+
+</robot>

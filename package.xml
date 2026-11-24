@@ -28,6 +28,8 @@
   <depend>robot_state_publisher</depend>
   <depend>gazebo_ros_pkgs</depend>
   <depend>ros2launch</depend>
+  <exec_depend>gazebo_plugins</exec_depend>
+  <exec_depend>rviz2</exec_depend>
   <buildtool_depend>rosidl_default_generators</buildtool_depend>
   <exec_depend>rosidl_default_runtime</exec_depend>
   <member_of_group>rosidl_interface_packages</member_of_group>
